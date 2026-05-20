@@ -15,6 +15,11 @@ export const useQueueStore = defineStore("queueStore", () => {
 	}
 
 	function playMusic(index: number) {
+		selectMusic(index)
+		play()
+	}
+
+	function selectMusic(index: number) {
 		playIndex.value = index;
 		setAudio(queue.value[index]!);
 	}
@@ -122,6 +127,7 @@ export const useQueueStore = defineStore("queueStore", () => {
 		changeMode,
 		addMusic,
 		deleteMusic,
+		selectMusic,
 		playLists,
 		playMusic,
 		playPrev,

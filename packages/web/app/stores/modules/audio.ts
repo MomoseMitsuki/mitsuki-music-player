@@ -84,7 +84,6 @@ export const useAudioStore = defineStore("audioStore", () => {
 		reactiveInfo.value.src = music.src;
 		ensureAudio().currentTime = 0;
 		reactiveInfo.value.currentTime = 0;
-		ensureAudio().play();
 	}
 
 	function setVolume() {
