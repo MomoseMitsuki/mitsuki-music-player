@@ -1,0 +1,25 @@
+@use "variables.scss" as *;
+
+a {
+	text-decoration: none;
+}
+
+.page__title {
+	display: flex;
+	align-items: end;
+	h2 {
+		color: $text_color;
+	}
+	h5 {
+		margin-left: 10px;
+		margin-bottom: 2px;
+		color: $light_text_color;
+	}
+}
+
+input {
+	border: none;
+	&:focus-visible {
+		outline: none;
+	}
+}

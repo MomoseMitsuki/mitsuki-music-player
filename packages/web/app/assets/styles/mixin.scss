@@ -1,0 +1,18 @@
+@mixin gradient-text($background, $shadow: none) {
+	background: $background;
+	-webkit-background-clip: text;
+	background-clip: text;
+	color: transparent;
+
+	@if $shadow != none {
+		filter: $shadow;
+	}
+
+	@content;
+}
+
+@mixin ellipsis {
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
