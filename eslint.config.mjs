@@ -49,11 +49,18 @@ export default defineConfig(
 			parser: vueParser,
 			parserOptions: {
 				sourceType: "module",
-				parser: tseslint.parser
+				parser: tseslint.parser,
+				ecmaFeatures: {
+					jsx: true
+				}
 			},
 			globals: {
 				...globals.browser
 			}
+		},
+		rules: {
+			"vue/multi-word-component-names": "off",
+			"no-undef": "off"
 		}
 	},
 	// {

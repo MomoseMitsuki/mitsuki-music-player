@@ -6,7 +6,7 @@
 	"type": "module",
 	"scripts": {
 		"lint:prettier": "prettier --write \"**/*.{js,ts,mjs,cjs,json,tsx,css,less,scss,vue,html,md}\"",
-		"lint:eslint": "eslint",
+		"lint:eslint": "eslint . --fix --cache",
 		"lint:spellcheck": "cspell lint \"packages/**/*.{js,ts,mjs,cjs,json,css,less,scss,vue,html,md}\"",
 		"commit": "git-cz",
 		"prepare": "husky",
@@ -47,7 +47,7 @@
 		"husky": "^9.1.7",
 		"npm-run-all2": "^8.0.4",
 		"prettier": "^3.8.0",
-		"turbo": "^2.8.9",
+		"turbo": "^2.9.14",
 		"typescript": "^5.9.3",
 		"typescript-eslint": "^8.53.0",
 		"vue-eslint-parser": "^10.2.0"

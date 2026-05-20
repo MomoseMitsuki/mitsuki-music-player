@@ -1,0 +1,13 @@
+ename
+sider
+Montserra
+Hanao
+Usaka
+Tsuku
+VOLUMEKEY
+MODEKEY
+QUEUEKEY
+Artplayer
+artplayer
+cssr
+FFTSIZE

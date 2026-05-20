@@ -50,3 +50,7 @@ coverage/
 
 # Turborepo
 .turbo/
+
+# eslint
+.eslintcache
+
