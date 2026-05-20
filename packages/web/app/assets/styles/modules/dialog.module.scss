@@ -1,0 +1,34 @@
+@use "../variables.scss" as *;
+
+.playlist__icon {
+	margin-top: 3px;
+	color: $primary;
+	fill: $primary;
+}
+
+.playlist__title {
+	margin: 10px 0 0 15px;
+	color: $text_color;
+}
+
+.playlist__container {
+	color: $text_color;
+	margin-top: 20px;
+	padding: 20px 0;
+	input {
+		margin: auto;
+		padding: 0 10px;
+		width: 350px;
+		height: 35px;
+		border-radius: 5px;
+		background-color: #f9f7fb;
+	}
+}
+
+.playlist__btn {
+	width: 40%;
+	margin: 0 20px 0 0;
+	padding: 8px;
+	font-size: 15px;
+	border-radius: 0px;
+}
