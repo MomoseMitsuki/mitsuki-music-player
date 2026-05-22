@@ -2,7 +2,7 @@
 const page = defineModel("page", { type: Number, required: true });
 defineProps<{
 	pageCount: number;
-	data: Array<Music>;
+	data: Array<Video>;
 }>();
 
 const emit = defineEmits<{
@@ -16,7 +16,7 @@ function updatePage(page: number) {
 
 <template>
 	<div>
-		<MusicTable :data="data" />
+		<VideoTable :data="data" />
 		<n-flex justify="end" style="margin: 20px">
 			<n-pagination
 				v-model:page="page"
