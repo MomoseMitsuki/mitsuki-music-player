@@ -1,7 +1,12 @@
 <script lang="ts" setup>
 const { addMusic } = useQueueStore();
+const userStore = useUserStore();
+
+const { isMusicInFavorite, addMusicToFavorite, deleteMusicFromFavorite } =
+	userStore;
+const { navigateVideo } = useNavigatorStore();
+
 const { selectedIndex, mouseEnterItem, mouseLeaveItem } = useSelectedIndex();
-const { navigateVideo } = useNavigator();
 
 defineProps<{
 	data: Array<Music>;
@@ -52,7 +57,20 @@ defineProps<{
 				name="mdi:plus"
 				size="20"
 			></Icon>
-			<Icon name="mdi:cards-heart-outline" size="20"></Icon>
+			<Icon
+				v-if="!isMusicInFavorite(item)"
+				name="mdi:cards-heart-outline"
+				:size="20"
+				class="heart hover"
+				@click.stop="() => addMusicToFavorite(item)"
+			></Icon>
+			<Icon
+				v-else
+				name="mdi:cards-heart"
+				:size="20"
+				class="heart hover primary"
+				@click.stop="() => deleteMusicFromFavorite(item)"
+			></Icon>
 			<div class="album">
 				{{ item.album ? item.album.name : "-" }}
 			</div>
@@ -68,10 +86,11 @@ svg {
 		color: $primary;
 		transform: scale(1.08);
 	}
+	&.primary {
+		color: $primary;
+	}
 }
 .item__container {
-	margin-left: 100px;
-	margin-right: 50px;
 	border-radius: 5px;
 	height: 75px;
 	cursor: pointer;
