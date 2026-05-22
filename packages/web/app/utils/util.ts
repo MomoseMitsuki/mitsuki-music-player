@@ -53,3 +53,16 @@ export function debounce<T extends (...args: any[]) => void>(
 		}, delay);
 	};
 }
+
+export function randomNum(min: number, max: number) {
+	return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+export function isInList(music: Music, list: Array<Music>): number {
+	for (const [index, item] of Object.entries(list)) {
+		if (music.id === item.id) {
+			return Number(index);
+		}
+	}
+	return -1;
+}
