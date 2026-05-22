@@ -13,7 +13,6 @@ watch(
 	() => route.path,
 	() => {
 		const childPath = route.path.replace(/^\/library\/?/, "");
-		console.log(childPath);
 		const childPathArr = ["", "local", "recent", "love"];
 		const index = childPathArr.findIndex(
 			(path: string) => path === childPath
@@ -21,7 +20,6 @@ watch(
 		const GAP = 12;
 		const WIDTH = 144;
 		underline_x.value = index * WIDTH + (index ? index * GAP : 0);
-		console.log(underline_x.value);
 	},
 	{
 		immediate: true

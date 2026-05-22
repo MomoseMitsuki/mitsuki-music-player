@@ -1,5 +1,4 @@
 import { defineStore } from "pinia";
-import { eventEmitter } from "@/utils";
 import { useAudioStore } from "#imports";
 
 export const useQueueStore = defineStore("queueStore", () => {
@@ -15,8 +14,8 @@ export const useQueueStore = defineStore("queueStore", () => {
 	}
 
 	function playMusic(index: number) {
-		selectMusic(index)
-		play()
+		selectMusic(index);
+		play();
 	}
 
 	function selectMusic(index: number) {
@@ -43,14 +42,13 @@ export const useQueueStore = defineStore("queueStore", () => {
 	}
 
 	function addMusic(music: Music) {
-		for (const [index, item] of Object.entries(queue.value)) {
-			if (item.id === music.id) {
-				playMusic(Number(index));
-				return;
-			}
+		const index = isInList(music, queue.value);
+		if (index !== -1) {
+			playMusic(index);
+		} else {
+			queue.value.push(music);
+			playMusic(queue.value.length - 1);
 		}
-		queue.value.push(music);
-		playMusic(queue.value.length - 1);
 	}
 
 	function deleteMusic(index: number) {
@@ -99,9 +97,7 @@ export const useQueueStore = defineStore("queueStore", () => {
 				break;
 			case 2:
 				// 随机播放
-				playIndex.value = Math.floor(
-					Math.random() * queue.value.length
-				);
+				playIndex.value = randomNum(0, queue.value.length - 1);
 				playMusic(playIndex.value);
 				break;
 			case 3:

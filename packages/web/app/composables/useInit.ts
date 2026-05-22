@@ -19,7 +19,7 @@ const debounceSetQueue = debounce((queue: Array<Music>) => {
 
 const debounceSetPlayIndex = debounce((index: number) => {
 	localforage.setItem(PLAYINDEXKEY, index);
-})
+});
 
 export async function useInit() {
 	// 本地读取 播放队列 音量 播放模式
@@ -33,17 +33,17 @@ export async function useInit() {
 	queue.value = await getInitData<Array<Music>>(QUEUEKEY, []);
 	mode.value = await getInitData<number>(MODEKEY, 0);
 	reactiveInfo.value.volume = await getInitData<number>(VOLUMEKEY, 100);
-	playIndex.value = await getInitData<number>(PLAYINDEXKEY, -1)
+	playIndex.value = await getInitData<number>(PLAYINDEXKEY, -1);
 
 	// playIndex 越界
 	if (playIndex.value >= queue.value.length) {
-		playIndex.value = queue.value.length - 1
+		playIndex.value = queue.value.length - 1;
 	}
 	if (playIndex.value !== -1) {
 		selectMusic(playIndex.value);
 	}
 
-	watch(playIndex, debounceSetPlayIndex)
+	watch(playIndex, debounceSetPlayIndex);
 	watch(() => reactiveInfo.value.volume, debounceSetVolume);
 	watch(mode, debounceSetMode);
 	watch(queue, debounceSetQueue);

@@ -12,11 +12,11 @@ export const useNavigatorStore = defineStore("navigatorStore", () => {
 	}
 
 	function navigateAlbum(id: Id) {
-		router.push(`/album/${id}`)
+		router.push(`/album/${id}`);
 	}
 
 	function navigateArtist(id: Id) {
-		router.push(`/artist/${id}`)
+		router.push(`/artist/${id}`);
 	}
 
 	return {
@@ -25,4 +25,4 @@ export const useNavigatorStore = defineStore("navigatorStore", () => {
 		navigateAlbum,
 		navigateArtist
 	};
-})
+});
