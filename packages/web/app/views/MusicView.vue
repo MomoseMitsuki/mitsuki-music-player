@@ -1,16 +1,17 @@
 <script lang="ts" setup>
 import PlayQueue from "./PlayQueue.vue";
-import { useAudioStore, useQueueStore } from "#imports";
-import { formatTime } from "@/utils";
 
 const audioStore = useAudioStore();
 const queueStore = useQueueStore();
+const userStore = useUserStore();
 
 const { play, pause, ensureAudio, setVolume } = audioStore;
 const { changeMode, playPrev, playNext } = queueStore;
+const { isMusicInFavorite, addMusicToFavorite, deleteMusicFromFavorite } =
+	userStore;
 
 const { reactiveInfo, isDragProgress } = storeToRefs(audioStore);
-const { mode } = storeToRefs(queueStore);
+const { queue, mode, playIndex } = storeToRefs(queueStore);
 
 const startDragMusicProgress = () => {
 	isDragProgress.value = true;
@@ -45,16 +46,18 @@ const endDragMusicProgress = () => {
 			</div>
 		</div>
 		<Icon
-			v-if="!1"
+			v-if="!isMusicInFavorite(queue[playIndex]!)"
 			name="mdi:cards-heart-outline"
 			:size="24"
 			class="heart hover"
+			@click="() => addMusicToFavorite(queue[playIndex]!)"
 		></Icon>
 		<Icon
 			v-else
 			name="mdi:cards-heart"
 			:size="24"
 			class="heart hover primary"
+			@click="() => deleteMusicFromFavorite(queue[playIndex]!)"
 		></Icon>
 
 		<Icon

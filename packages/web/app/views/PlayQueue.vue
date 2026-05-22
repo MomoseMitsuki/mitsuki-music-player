@@ -1,16 +1,17 @@
 <script lang="ts" setup>
-import { storeToRefs } from "pinia";
-import { useQueueStore, formatTime } from "#imports";
-
 const queueStore = useQueueStore();
-const { selectedIndex, mouseEnterItem, mouseLeaveItem } = useSelectedIndex();
-const { navigateVideo } = useNavigator();
+const { navigateVideo } = useNavigatorStore();
+const userStore = useUserStore();
 
 const { playMusic, deleteMusic } = queueStore;
+const { isMusicInFavorite, addMusicToFavorite, deleteMusicFromFavorite } =
+	userStore;
+
 const { queue } = storeToRefs(queueStore);
 
-const searchValue = ref("");
+const { selectedIndex, mouseEnterItem, mouseLeaveItem } = useSelectedIndex();
 
+const searchValue = ref("");
 const isOpenSearchInput = ref(false);
 
 function openSearchInput() {
@@ -99,7 +100,20 @@ function openSearchInput() {
 					{{ formatTime(item.duration) }}
 				</div>
 				<div v-show="selectedIndex === index" class="icon__container">
-					<Icon name="mdi:cards-heart-outline" size="20"></Icon>
+					<Icon
+						v-if="!isMusicInFavorite(item)"
+						name="mdi:cards-heart-outline"
+						:size="24"
+						class=""
+						@click.stop="() => addMusicToFavorite(item)"
+					></Icon>
+					<Icon
+						v-else
+						name="mdi:cards-heart"
+						:size="24"
+						class="primary"
+						@click.stop="() => deleteMusicFromFavorite(item)"
+					></Icon>
 					<Icon
 						v-if="item.videoId"
 						name="mdi:play-box-outline"
@@ -139,6 +153,9 @@ svg {
 	transition: transform 0.1s ease;
 	&:hover {
 		transform: scale(1.08);
+	}
+	&.primary {
+		color: $primary;
 	}
 }
 .input__container {

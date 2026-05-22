@@ -1,21 +1,19 @@
 <script lang="ts" setup>
-import {
-	useAudioStore,
-	useQueueStore,
-	useTemplateRef,
-	onMounted
-} from "#imports";
-import { storeToRefs } from "pinia";
-
 const dialog = useDialog();
+
 const audioStore = useAudioStore();
 const queueStore = useQueueStore();
-const { show } = useCreatePlayListDialog(dialog);
+const userStore = useUserStore();
 
 const { play, pause } = audioStore;
 const { playPrev, playNext } = queueStore;
+const { isMusicInFavorite, addMusicToFavorite, deleteMusicFromFavorite } =
+	userStore;
 
 const { reactiveInfo, isInit, analyser, dataArray } = storeToRefs(audioStore);
+const { queue, playIndex } = storeToRefs(queueStore);
+
+const { show } = useCreatePlayListDialog(dialog);
 
 const GAP = 2;
 const canvasRef = useTemplateRef("canvas");
@@ -85,16 +83,20 @@ onMounted(() => {
 					</div>
 				</div>
 				<Icon
-					v-if="!1"
+					v-if="!isMusicInFavorite(queue[playIndex]!)"
 					name="mdi:cards-heart-outline"
 					:size="24"
-					class="hover"
+					class="heart hover"
+					@click.stop="() => addMusicToFavorite(queue[playIndex]!)"
 				></Icon>
 				<Icon
 					v-else
 					name="mdi:cards-heart"
 					:size="24"
-					class="hover primary"
+					class="heart hover primary"
+					@click.stop="
+						() => deleteMusicFromFavorite(queue[playIndex]!)
+					"
 				></Icon>
 			</n-flex>
 
@@ -255,6 +257,9 @@ svg {
 	fill: $text_color;
 	cursor: pointer;
 	transition: transform 0.1s ease-in;
+	&.heart.primary {
+		margin: 0;
+	}
 	&.primary {
 		margin: 0 18px;
 		color: $primary;
