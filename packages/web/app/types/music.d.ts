@@ -20,6 +20,14 @@ interface Video extends BaseData {
 	singers: string;
 }
 
+interface Artist extends BaseData {
+	avatar?: string;
+	name: string;
+	albums: Array<SimpleAlbum>;
+	songs: Array<Music>;
+	videos: Array<Video>;
+}
+
 interface QueryMusic {
 	total: number;
 	data: Array<Music>;

@@ -1,6 +1,7 @@
 interface SimpleAlbum extends BaseData {
 	avatar?: string;
 	name: string;
+	singers: string;
 	view: number;
 }
 
