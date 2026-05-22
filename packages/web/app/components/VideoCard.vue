@@ -1,30 +1,33 @@
 <script lang="ts" setup>
 defineProps<{
-	src: string;
-	title: string;
-	singer: string;
-	duration: number;
-	view: number;
-	updateTime: number;
+	data: Video;
 }>();
+
+const { navigateVideo } = useNavigatorStore();
 </script>
 
 <template>
-	<div class="card__container">
+	<div class="card__container" @click="() => navigateVideo(data.id)">
 		<div class="img__container">
 			<NuxtImg
-				:src="src"
+				:src="
+					data.avatar
+						? data.avatar
+						: '/images/default_video_avatar.webp'
+				"
 				placeholder="/images/default_video_avatar.webp"
 				width="216px"
 				height="159px"
 				fit="cover"
 			/>
-			<div>{{ formatTime(duration) }}</div>
+			<div>{{ formatTime(data.duration) }}</div>
 		</div>
 		<div class="info__container">
-			<div class="title">{{ title }}</div>
-			<div>{{ singer }}</div>
-			<div>{{ view }}次观看 {{ formatTimeAgo(updateTime) }}</div>
+			<div class="title ellipsis">{{ data.name }}</div>
+			<div class="ellipsis">{{ data.singers }}</div>
+			<div class="ellipsis">
+				{{ data.view }}次观看 {{ formatTimeAgo(data.updateTime) }}
+			</div>
 		</div>
 	</div>
 </template>

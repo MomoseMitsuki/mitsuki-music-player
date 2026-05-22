@@ -1,9 +1,6 @@
 <script lang="ts" setup>
 defineProps<{
-	src: string;
-	title: string;
-	subTitle: string;
-	date: string;
+	data: SimpleAlbum;
 }>();
 </script>
 
@@ -11,7 +8,7 @@ defineProps<{
 	<div class="card__container">
 		<div style="position: relative">
 			<NuxtImg
-				:src="src ? src : undefined"
+				:src="data.avatar ? data.avatar : undefined"
 				placeholder="/images/default_music_avatar.webp"
 				width="180px"
 				height="170px"
@@ -22,9 +19,9 @@ defineProps<{
 			</div>
 		</div>
 		<div class="info__container">
-			<h5>{{ title }}</h5>
-			<div>{{ subTitle }}</div>
-			<div>{{ date }}</div>
+			<h5 class="ellipsis">{{ data.name }}</h5>
+			<div class="ellipsis">{{ data.singers }}</div>
+			<div class="ellipsis">{{ formatDate(data.createTime) }}</div>
 		</div>
 	</div>
 </template>
@@ -56,11 +53,11 @@ defineProps<{
 .info__container {
 	padding: 5px 20px;
 	h5 {
-		color: $text_color;
+		color: $bold_text_color;
 	}
 	div {
 		font-size: 10px;
-		color: $light_text_color;
+		color: $text_color;
 	}
 }
 .play__btn {
