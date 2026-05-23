@@ -11,6 +11,7 @@ interface AudioState {
 	currentTime: number;
 	duration: number;
 	volume: number;
+	lyricId: string;
 }
 const EMPTY_DATA: AudioState = {
 	name: "花逢坂町",
@@ -20,7 +21,8 @@ const EMPTY_DATA: AudioState = {
 	paused: true,
 	currentTime: 0,
 	duration: 0,
-	volume: 100
+	volume: 100,
+	lyricId: ""
 };
 
 export const useAudioStore = defineStore("audioStore", () => {
@@ -29,7 +31,7 @@ export const useAudioStore = defineStore("audioStore", () => {
 	const analyser: Ref<AnalyserNode | null> = ref(null);
 	const dataArray: Ref<Uint8Array<ArrayBuffer> | null> = ref(null);
 
-	const reactiveInfo = ref(EMPTY_DATA);
+	const reactiveInfo = ref({ ...EMPTY_DATA });
 
 	const isDragProgress = ref(false);
 
@@ -66,6 +68,10 @@ export const useAudioStore = defineStore("audioStore", () => {
 			audioInstance.addEventListener("timeupdate", () => {
 				if (isDragProgress.value) return;
 				reactiveInfo.value.currentTime = audioInstance!.currentTime;
+				eventEmitter.emit(
+					"MUSIC:TIMEUPDATE",
+					audioInstance!.currentTime
+				);
 			});
 			audioInstance.addEventListener("loadedmetadata", () => {
 				reactiveInfo.value.duration = audioInstance!.duration;
@@ -84,6 +90,7 @@ export const useAudioStore = defineStore("audioStore", () => {
 		reactiveInfo.value.src = music.src;
 		ensureAudio().currentTime = 0;
 		reactiveInfo.value.currentTime = 0;
+		reactiveInfo.value.lyricId = music.lyricId;
 	}
 
 	function setVolume() {
@@ -91,7 +98,10 @@ export const useAudioStore = defineStore("audioStore", () => {
 	}
 
 	function emptyAudio() {
-		reactiveInfo.value = EMPTY_DATA;
+		pause();
+		reactiveInfo.value = { ...EMPTY_DATA };
+		ensureAudio().currentTime = 0;
+		ensureAudio().src = "";
 	}
 
 	function setCurrentTime(time: number) {

@@ -50,3 +50,42 @@ export function formatTimeAgo(timestamp: number): string {
 	const years = Math.floor(days / 365);
 	return `${years}年前`;
 }
+const _parseTime = (timeStr: string) => {
+	const parts = timeStr.split(":");
+	return +parts[0]! * 60 + +parts[1]!;
+};
+
+const _deleteSpace = (arr: Array<LyricLine>) => {
+	if (!Array.isArray(arr) || arr.length === 0) return arr;
+	const result: Array<LyricLine> = [];
+	for (let i = 0; i < arr.length; i++) {
+		const curr = arr[i];
+		const prev = result.length > 0 ? result[result.length - 1] : null;
+		if (
+			prev &&
+			curr!.time - prev.time < 3 &&
+			(!prev.words || prev.words.trim() === "")
+		) {
+			result.pop();
+		}
+		result.push(curr!);
+	}
+	return result;
+};
+
+export const formatLyric = (lyricStr: string) => {
+	const lyricData = lyricStr.split("\r\n\r\n");
+	const lines = lyricData[1]!.split("\r\n");
+	const result: Array<LyricLine> = [];
+	for (let i = 0; i < lines.length; i++) {
+		const str = lines[i]!;
+		const parts = str.split("]");
+		const timeStr = parts[0]!.substring(1);
+		const obj: LyricLine = {
+			time: _parseTime(timeStr),
+			words: parts[1]!
+		};
+		result.push(obj);
+	}
+	return _deleteSpace(result);
+};

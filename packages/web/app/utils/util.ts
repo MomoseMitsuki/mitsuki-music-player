@@ -1,5 +1,10 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const eventNames = ["MUSIC:PLAY", "MUSIC:END", "VIDEO:PLAY"] as const;
+const eventNames = [
+	"MUSIC:PLAY",
+	"MUSIC:END",
+	"MUSIC:TIMEUPDATE",
+	"VIDEO:PLAY"
+] as const;
 type EventNames = (typeof eventNames)[number];
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Func = (...args: any[]) => void;

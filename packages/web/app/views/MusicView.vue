@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import LyricView from "./LyricView.vue";
 import PlayQueue from "./PlayQueue.vue";
 
 const audioStore = useAudioStore();
@@ -13,6 +14,14 @@ const { isMusicInFavorite, addMusicToFavorite, deleteMusicFromFavorite } =
 const { reactiveInfo, isDragProgress } = storeToRefs(audioStore);
 const { queue, mode, playIndex } = storeToRefs(queueStore);
 
+const isOpenLyric = ref(false);
+
+function changeOpenLyric() {
+	isOpenLyric.value = !isOpenLyric.value;
+}
+
+eventEmitter.on("VIDEO:PLAY", () => (isOpenLyric.value = false));
+
 const startDragMusicProgress = () => {
 	isDragProgress.value = true;
 };
@@ -25,18 +34,33 @@ const endDragMusicProgress = () => {
 
 <template>
 	<n-flex class="music__container" align="center">
-		<NuxtImg
-			:src="
-				reactiveInfo.avatar
-					? reactiveInfo.avatar
-					: '/images/default_music_avatar.webp'
-			"
-			placeholder="/images/default_music_avatar.webp"
-			fallback="/images/default_music_avatar.webp"
-			width="50"
-			height="50"
-			fit="cover"
-		></NuxtImg>
+		<div class="avatar__container" @click="changeOpenLyric">
+			<div class="cover">
+				<svg
+					:class="{ lyric: isOpenLyric }"
+					viewBox="0 0 1024 1024"
+					xmlns="http://www.w3.org/2000/svg"
+					width="30"
+					height="30"
+				>
+					<path
+						d="M231.5 577.4L512 296.9l280.5 280.5c5.9 5.9 13.5 8.8 21.2 8.8s15.4-2.9 21.2-8.8c11.7-11.7 11.7-30.7 0-42.4L533.2 233.2c-11.7-11.7-30.7-11.7-42.4 0L189 535c-11.7 11.7-11.7 30.7 0 42.4 11.8 11.7 30.8 11.7 42.5 0zM835 748.3L533.2 446.6c-11.7-11.7-30.7-11.7-42.4 0L189 748.3c-11.7 11.7-11.7 30.7 0 42.4s30.7 11.7 42.4 0L512 510.2l280.5 280.5c5.9 5.9 13.5 8.8 21.2 8.8s15.4-2.9 21.2-8.8c11.8-11.7 11.8-30.7 0.1-42.4z"
+					></path>
+				</svg>
+			</div>
+			<NuxtImg
+				:src="
+					reactiveInfo.avatar
+						? reactiveInfo.avatar
+						: '/images/default_music_avatar.webp'
+				"
+				placeholder="/images/default_music_avatar.webp"
+				fallback="/images/default_music_avatar.webp"
+				width="50"
+				height="50"
+				fit="cover"
+			></NuxtImg>
+		</div>
 		<div class="music__info">
 			<div v-marquee="reactiveInfo.name" class="name">
 				{{ reactiveInfo.name }}
@@ -119,7 +143,7 @@ const endDragMusicProgress = () => {
 			</div>
 		</n-popover>
 
-		<div class="lyric hover m-10">词</div>
+		<div class="lyric hover m-10" @click="changeOpenLyric">词</div>
 
 		<!-- 
 			顺序播放 mdi:shuffle-disabled 	0
@@ -177,6 +201,9 @@ const endDragMusicProgress = () => {
 			</template>
 			<PlayQueue />
 		</n-popover>
+		<Teleport to="#teleports">
+			<LyricView id="container" :class="{ lyric__hide: !isOpenLyric }" />
+		</Teleport>
 	</n-flex>
 </template>
 
@@ -220,6 +247,8 @@ svg {
 }
 
 .music__container {
+	position: relative;
+	z-index: $z_music_view;
 	padding: 0 40px;
 	height: 75px;
 	background-color: #403e57;
@@ -278,5 +307,40 @@ svg {
 	user-select: none;
 	cursor: pointer;
 	transition: transform 0.1s ease-in;
+}
+.avatar__container {
+	position: relative;
+	z-index: 0;
+	width: 50px;
+	height: 50px;
+	overflow: hidden;
+	border-radius: 5px;
+	.cover {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		z-index: 11;
+		position: absolute;
+		inset: 0;
+		width: 50px;
+		height: 50px;
+		border-radius: 5px;
+		background: #00000080;
+		opacity: 0;
+		&:hover {
+			opacity: 1;
+		}
+		.lyric {
+			transform: rotateZ(180deg);
+		}
+	}
+}
+#container {
+	margin: 0;
+	transition: transform 0.5s ease;
+	will-change: transform;
+}
+.lyric__hide {
+	transform: translateY(100vh);
 }
 </style>
