@@ -1,11 +1,14 @@
 import { defineStore } from "pinia";
 import { useAudioStore } from "#imports";
 
+const RECENT_QUEUE_SIZE = 30;
+
 export const useQueueStore = defineStore("queueStore", () => {
 	const audioStore = useAudioStore();
 	const { setCurrentTime, setAudio, emptyAudio, pause, play } = audioStore;
 
 	const queue = ref<Array<Music>>([]);
+	const recentQueue = ref<Array<Music>>([]);
 	const mode = ref(0);
 	const playIndex = ref(-1);
 
@@ -13,9 +16,22 @@ export const useQueueStore = defineStore("queueStore", () => {
 		mode.value = (mode.value + 1) % 5;
 	}
 
+	function addToRecent(index: number) {
+		const music = queue.value[index]!;
+		const i = isInList(music, recentQueue.value);
+		if (i !== -1) {
+			recentQueue.value.splice(i, 1);
+		}
+		if (recentQueue.value.length > RECENT_QUEUE_SIZE) {
+			recentQueue.value.pop();
+		}
+		recentQueue.value.unshift(music);
+	}
+
 	function playMusic(index: number) {
 		selectMusic(index);
 		play();
+		addToRecent(index);
 	}
 
 	function selectMusic(index: number) {
@@ -117,6 +133,7 @@ export const useQueueStore = defineStore("queueStore", () => {
 
 	return {
 		queue,
+		recentQueue,
 		mode,
 		playIndex,
 
