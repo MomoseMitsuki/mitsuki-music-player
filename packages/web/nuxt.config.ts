@@ -20,6 +20,7 @@ export default defineNuxtConfig({
 		dirs: ["stores", "views"],
 		scan: true
 	},
+	components: ["components/table", "components/card", "components/page"],
 	vite: {
 		plugins: [
 			AutoImport({

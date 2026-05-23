@@ -2,10 +2,12 @@
 defineProps<{
 	data: SimpleAlbum;
 }>();
+
+const { navigateAlbum } = useNavigatorStore();
 </script>
 
 <template>
-	<div class="card__container">
+	<div class="card__container" @click="() => navigateAlbum(data.id)">
 		<div style="position: relative">
 			<NuxtImg
 				:src="data.avatar ? data.avatar : undefined"
