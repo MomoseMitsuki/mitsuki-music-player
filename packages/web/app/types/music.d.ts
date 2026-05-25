@@ -32,3 +32,8 @@ interface QueryMusic {
 	total: number;
 	data: Array<Music>;
 }
+
+interface LyricLine {
+	time: number;
+	words: string;
+}
