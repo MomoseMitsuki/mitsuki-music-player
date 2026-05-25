@@ -1,8 +1,10 @@
 <script lang="ts" setup>
+const audioStore = useAudioStore();
 const queueStore = useQueueStore();
 const { navigateVideo } = useNavigatorStore();
 const userStore = useUserStore();
 
+const { emptyAudio } = audioStore;
 const { playMusic, deleteMusic } = queueStore;
 const { isMusicInFavorite, addMusicToFavorite, deleteMusicFromFavorite } =
 	userStore;
@@ -17,6 +19,11 @@ const isOpenSearchInput = ref(false);
 function openSearchInput() {
 	isOpenSearchInput.value = !isOpenSearchInput.value;
 	searchValue.value = "";
+}
+
+function clearDefaultQueue() {
+	queue.value = [];
+	emptyAudio();
 }
 </script>
 
@@ -39,7 +46,11 @@ function openSearchInput() {
 						fill="#897b84"
 					></path>
 				</svg>
-				<Icon name="mdi:plus" size="20"></Icon>
+				<Icon
+					name="mdi:delete-outline"
+					size="20"
+					@click="clearDefaultQueue"
+				></Icon>
 			</n-flex>
 			<n-flex
 				v-show="isOpenSearchInput"
@@ -64,7 +75,7 @@ function openSearchInput() {
 				<div class="cancel__btn" @click="openSearchInput">取消</div>
 			</n-flex>
 		</div>
-		<div class="item__container">
+		<div v-if="queue.length !== 0" class="item__container">
 			<!-- width: 350px - padding 40px => 310px -->
 			<n-flex
 				v-for="(item, index) in queue"
@@ -130,6 +141,12 @@ function openSearchInput() {
 				</div>
 			</n-flex>
 		</div>
+		<n-empty
+			v-else
+			size="large"
+			description="暂无数据"
+			class="empty__data"
+		></n-empty>
 	</div>
 </template>
 
