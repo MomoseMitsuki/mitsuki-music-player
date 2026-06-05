@@ -10,8 +10,8 @@ const { navigatePlaylist } = useNavigatorStore();
 	<div class="card__container" @click="() => navigatePlaylist(data.id)">
 		<div style="position: relative">
 			<NuxtImg
-				:src="data.avatar ? data.avatar : undefined"
-				placeholder="/images/default_music_avatar.webp"
+				:src="useAvatar(data.avatar)"
+				:placeholder="DefaultAvatar.MUSIC"
 				width="180px"
 				height="170px"
 				fit="cover"
@@ -22,7 +22,7 @@ const { navigatePlaylist } = useNavigatorStore();
 		</div>
 		<div class="info__container">
 			<h5 class="ellipsis">{{ data.name }}</h5>
-			<div class="ellipsis">{{ data.creator }}</div>
+			<div class="ellipsis">{{ data.creator.name }}</div>
 			<div class="ellipsis">{{ formatDate(data.createTime) }}</div>
 		</div>
 	</div>

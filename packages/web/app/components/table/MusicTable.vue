@@ -2,11 +2,34 @@
 const { addMusic } = useQueueStore();
 const userStore = useUserStore();
 
-const { isMusicInFavorite, addMusicToFavorite, deleteMusicFromFavorite } =
-	userStore;
-const { navigateVideo } = useNavigatorStore();
-
+const { isMusicInFavorite, toggleFavoriteMusic } = userStore;
+const { navigateVideo, navigateArtist, navigateAlbum } = useNavigatorStore();
 const { selectedIndex, mouseEnterItem, mouseLeaveItem } = useSelectedIndex();
+
+let cacheIndex = -1;
+
+const isClickPicker = ref(false);
+
+function mouseEnter(index: number) {
+	if (isClickPicker.value) {
+		cacheIndex = index;
+		return;
+	}
+	mouseEnterItem(index);
+}
+
+function mouseLeave() {
+	if (isClickPicker.value) {
+		cacheIndex = -1;
+		return;
+	}
+	mouseLeaveItem();
+}
+
+function cancelPicker() {
+	isClickPicker.value = false;
+	selectedIndex.value = cacheIndex;
+}
 
 defineProps<{
 	data: Array<Music>;
@@ -20,18 +43,14 @@ defineProps<{
 			:key="item.id"
 			align="center"
 			class="item__container"
-			@mouseenter="() => mouseEnterItem(index)"
-			@mouseleave="mouseLeaveItem"
+			@mouseenter="() => mouseEnter(index)"
+			@mouseleave="mouseLeave"
 			@click="() => addMusic(item)"
 		>
 			<div class="index">{{ index + 1 }}</div>
 			<NuxtImg
-				:src="
-					item.avatar
-						? item.avatar
-						: '/images/default_music_avatar.webp'
-				"
-				placeholder="/images/default_music_avatar.webp"
+				:src="useAvatar(item.avatar, DefaultAvatar.MUSIC)"
+				:placeholder="DefaultAvatar.MUSIC"
 				width="50px"
 				height="50px"
 				fit="cover"
@@ -39,7 +58,19 @@ defineProps<{
 			<div class="info" :class="{ info__hover: selectedIndex === index }">
 				<div class="name">{{ item.name }}</div>
 				<div class="singers">
-					{{ item.singers ? item.singers : "未知" }}
+					<span v-if="item.singers.length === 0">未知</span>
+					<span v-else>
+						<span
+							v-for="(singer, i) in item.singers"
+							:key="singer.id"
+						>
+							<span
+								@click.stop="() => navigateArtist(singer.id)"
+								>{{ singer.name }}</span
+							>
+							{{ i === item.singers.length - 1 ? "" : "、" }}
+						</span>
+					</span>
 				</div>
 			</div>
 			<div v-if="selectedIndex === index" class="icon__space">
@@ -51,28 +82,43 @@ defineProps<{
 				></Icon>
 				<div v-else style="width: 20px"></div>
 			</div>
+			<n-popover
+				v-if="selectedIndex === index"
+				placement="right-start"
+				trigger="click"
+				@mouseenter="() => mouseEnterItem(index)"
+				@clickoutside="cancelPicker"
+			>
+				<template #trigger>
+					<Icon
+						name="mdi:plus"
+						size="20"
+						@click.stop="() => (isClickPicker = true)"
+					></Icon>
+				</template>
+				<PlaylistPicker :id="item.id" />
+			</n-popover>
 
 			<Icon
-				v-if="selectedIndex === index"
-				name="mdi:plus"
-				size="20"
-			></Icon>
-			<Icon
-				v-if="!isMusicInFavorite(item)"
+				v-if="!isMusicInFavorite(item.id)"
 				name="mdi:cards-heart-outline"
 				:size="20"
 				class="heart hover"
-				@click.stop="() => addMusicToFavorite(item)"
+				@click.stop="() => toggleFavoriteMusic(item.id)"
 			></Icon>
 			<Icon
 				v-else
 				name="mdi:cards-heart"
 				:size="20"
 				class="heart hover primary"
-				@click.stop="() => deleteMusicFromFavorite(item)"
+				@click.stop="() => toggleFavoriteMusic(item.id)"
 			></Icon>
 			<div class="album">
-				{{ item.album ? item.album.name : "-" }}
+				<span
+					v-if="item.album"
+					@click.stop="() => navigateAlbum(item.album!.id)"
+					>{{ item.album.name }}</span
+				>
 			</div>
 			<div class="duration">{{ formatTime(item.duration) }}</div>
 		</n-flex>

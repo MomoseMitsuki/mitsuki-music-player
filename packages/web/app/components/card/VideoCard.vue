@@ -10,12 +10,8 @@ const { navigateVideo } = useNavigatorStore();
 	<div class="card__container" @click="() => navigateVideo(data.id)">
 		<div class="img__container">
 			<NuxtImg
-				:src="
-					data.avatar
-						? data.avatar
-						: '/images/default_video_avatar.webp'
-				"
-				placeholder="/images/default_video_avatar.webp"
+				:src="useAvatar(data.avatar, DefaultAvatar.VIDEO)"
+				:placeholder="DefaultAvatar.VIDEO"
 				width="216px"
 				height="159px"
 				fit="cover"

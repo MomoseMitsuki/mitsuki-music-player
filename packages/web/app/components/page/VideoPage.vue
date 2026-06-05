@@ -16,7 +16,7 @@ function updatePage(page: number) {
 
 <template>
 	<div>
-		<VideoTable :data="data" />
+		<VideoTable :data="data" :col="4" />
 		<n-flex justify="end" style="margin: 20px">
 			<n-pagination
 				v-model:page="page"
