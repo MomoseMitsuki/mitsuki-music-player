@@ -16,11 +16,25 @@ export default defineNuxtConfig({
 			titleTemplate: "%s - 『 花 逢 坂 町 』 🌸 音乐演绎厅"
 		}
 	},
+	runtimeConfig: {
+		public: {
+			apiPrefix:
+				process.env.NUXT_PUBLIC_API_MODE === "mock" ? "mock" : "api",
+			backendOrigin: process.env.NUXT_PUBLIC_BACKEND_ORIGIN,
+			imageUrl: process.env.NUXT_PUBLIC_IMAGE_URL
+		}
+	},
 	imports: {
-		dirs: ["stores", "views"],
+		dirs: ["stores", "views", "constant", "components/command"],
 		scan: true
 	},
-	components: ["components/table", "components/card", "components/page"],
+	components: [
+		"components/",
+		"components/table",
+		"components/card",
+		"components/page",
+		"components/hoc"
+	],
 	vite: {
 		plugins: [
 			AutoImport({

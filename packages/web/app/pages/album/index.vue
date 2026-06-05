@@ -1,7 +1,11 @@
 <script lang="ts" setup>
+import MockAlbums from "~/mock/albums.json";
+
+const data = [...MockAlbums];
+
 const query = ref({
 	page: 1,
-	total: 1,
+	pageCount: 2,
 	createTime: "all"
 });
 const selected = ref({
@@ -33,6 +37,10 @@ function handleSelectTime(key: string) {
 		}
 	}
 }
+
+function updatePage() {
+	console.log(query.value);
+}
 </script>
 
 <template>
@@ -54,23 +62,13 @@ function handleSelectTime(key: string) {
 				</div>
 			</n-dropdown>
 		</n-flex>
-		<n-grid :cols="5" :x-gap="20" :y-gap="20">
-			<n-grid-item v-for="i in 15" :key="i">
-				<AlbumCard
-					src="test"
-					title="宝石心学院 原生音乐集"
-					sub-title="OST"
-					date="2024.01.03"
-				/>
-			</n-grid-item>
-		</n-grid>
-		<n-flex justify="end" style="margin: 20px">
-			<n-pagination
-				v-model:page="query.page"
-				:page-count="query.total"
-				class="album__pagination"
-			/>
-		</n-flex>
+		<AlbumPage
+			v-model:page="query.page"
+			:col="5"
+			:data="data"
+			:page-count="query.pageCount"
+			@update-page="updatePage"
+		/>
 	</div>
 </template>
 

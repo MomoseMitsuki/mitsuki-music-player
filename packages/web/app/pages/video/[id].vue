@@ -8,9 +8,12 @@ const id = Number(route.params.id!);
 
 let player: Artplayer | null = null;
 const { pause } = useAudioStore();
+const userStore = useUserStore();
 const videoRef = useTemplateRef("video");
 
-const data = { ...MockVideoData[id - 1]! };
+const data = ref({ ...MockVideoData[id - 1]! });
+
+const { toggleFavoriteVideo, isVideoInFavorite } = userStore;
 
 function stopPlayer() {
 	if (player) {
@@ -54,13 +57,15 @@ async function initVideo(url: string) {
 		}
 	});
 
-	player.on("play", pause);
+	player.on("play", () => {
+		pause();
+	});
 	eventEmitter.on("MUSIC:PLAY", stopPlayer);
 }
 
 onMounted(() => {
 	pause();
-	initVideo(data.src);
+	initVideo(data.value.src);
 });
 
 onUnmounted(() => {
@@ -75,19 +80,39 @@ onUnmounted(() => {
 <template>
 	<div class="page__container">
 		<div id="video__container" ref="video"></div>
-		<div class="info__container">
-			<h2>{{ data.name }} - {{ data.singers }}</h2>
-			<n-flex align="center" :size="[50, 0]" style="margin-top: 10px">
-				<div>歌手：{{ data.singers }}</div>
-				<div>发布：{{ formatDate(data.createTime) }}</div>
-				<div>播放：{{ data.view }}</div>
-			</n-flex>
-		</div>
+		<n-flex align="center" class="flex__container">
+			<div class="info__container">
+				<h2>{{ data.name }} - {{ data.singers }}</h2>
+				<n-flex align="center" :size="[50, 0]" style="margin-top: 10px">
+					<div>歌手：{{ data.singers }}</div>
+					<div>发布：{{ formatDate(data.createTime) }}</div>
+					<div>播放：{{ data.view }}</div>
+				</n-flex>
+			</div>
+			<button
+				:class="{ primary: isVideoInFavorite(data.id) }"
+				@click="() => toggleFavoriteVideo(data.id)"
+			>
+				<n-flex
+					v-if="!isVideoInFavorite(data.id)"
+					align="center"
+					:size="[0, 0]"
+				>
+					<Icon name="mdi:plus"></Icon>
+					<span>收藏</span>
+				</n-flex>
+				<n-flex v-else align="center" :size="[0, 0]">
+					<Icon name="mdi:check"></Icon>
+					<span>已收藏</span>
+				</n-flex>
+			</button>
+		</n-flex>
 	</div>
 </template>
 
 <style scoped lang="scss">
 #video__container {
+	position: relative;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -98,10 +123,19 @@ onUnmounted(() => {
 	width: 90%;
 	aspect-ratio: 16/9;
 	overflow: hidden;
+	cursor: pointer;
 }
-.info__container {
+.flex__container {
 	width: 90%;
 	margin: auto;
+	padding-right: 10px;
+	button {
+		margin-left: auto;
+		height: 40px;
+	}
+}
+.info__container {
+	width: 70%;
 	color: $bold_text_color;
 }
 </style>

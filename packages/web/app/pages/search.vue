@@ -1,7 +1,6 @@
 <script lang="ts" setup>
-import { useHeadSafe } from "#app";
 useHeadSafe({
-	title: "艺术家"
+	title: "搜索"
 });
 </script>
 

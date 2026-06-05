@@ -1,16 +1,19 @@
 <script lang="ts" setup>
-import VideoCard from "~/components/VideoCard.vue";
-
 // const PAGESIZE = 15;
+import MockVideo from "~/mock/video.json";
+
+const data = [...MockVideo];
 
 const query = ref({
 	page: 1,
-	total: 1,
+	pageCount: 3,
 	createTime: "all"
 });
+
 const selected = ref({
 	createTime: "全部"
 });
+
 const options = [
 	{
 		label: "全部",
@@ -28,6 +31,7 @@ options.push({
 	label: `${nowYear - 5}年及更早`,
 	key: `${nowYear - 5}<`
 });
+
 function handleSelectTime(key: string) {
 	query.value.createTime = key;
 	for (const option of options) {
@@ -36,6 +40,10 @@ function handleSelectTime(key: string) {
 			break;
 		}
 	}
+}
+
+function updatePage() {
+	console.log(query.value);
 }
 </script>
 
@@ -58,25 +66,12 @@ function handleSelectTime(key: string) {
 				</div>
 			</n-dropdown>
 		</n-flex>
-		<n-grid :cols="4" :x-gap="20" :y-gap="20">
-			<n-gi v-for="i in 12" :key="i">
-				<VideoCard
-					src="test"
-					title="宝石心学院"
-					singer="KyoKa"
-					:view="8635"
-					:duration="300"
-					:update-time="1779015025999"
-				/>
-			</n-gi>
-		</n-grid>
-		<n-flex justify="end" style="margin: 20px">
-			<n-pagination
-				v-model:page="query.page"
-				:page-count="query.total"
-				class="album__pagination"
-			/>
-		</n-flex>
+		<VideoPage
+			v-model:page="query.page"
+			:data="data"
+			:page-count="query.pageCount"
+			@update-page="updatePage"
+		/>
 	</div>
 </template>
 

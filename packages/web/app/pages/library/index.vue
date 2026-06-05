@@ -1,13 +1,13 @@
 <script lang="ts" setup>
-import MusicPage from "~/components/MusicPage.vue";
 import MockDataJson from "@/mock/music.json";
-const getAllMusic = async (pageSize: number, currentPage: number) => {
-	console.log(pageSize, currentPage);
-	return {
-		total: 20,
-		data: MockDataJson as Music[]
-	};
-};
+
+// const PAGESIZE = 10;
+
+const data = [...MockDataJson];
+
+function updatePage(page: number) {
+	console.log(page);
+}
 </script>
 
 <template>
@@ -23,9 +23,10 @@ const getAllMusic = async (pageSize: number, currentPage: number) => {
 			</button>
 		</n-flex>
 		<MusicPage
-			:page-size="10"
-			:update-page="getAllMusic"
-			:init="() => getAllMusic(10, 1)"
+			:data="data"
+			:page="1"
+			:page-count="2"
+			@update-page="updatePage"
 		/>
 	</div>
 </template>

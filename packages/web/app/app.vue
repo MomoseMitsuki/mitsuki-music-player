@@ -4,8 +4,7 @@ import type { GlobalThemeOverrides } from "naive-ui";
 const themeOverrides: GlobalThemeOverrides = {
 	common: {
 		bodyColor: "transparent",
-		baseColor: "transparent",
-		borderColor: "none"
+		baseColor: "transparent"
 	},
 	Layout: {
 		textColor: "#867982",
@@ -34,7 +33,6 @@ const themeOverrides: GlobalThemeOverrides = {
 		itemBorderHover: "0px",
 		itemColor: "transparent",
 		itemColorHover: "#FBEDF6",
-
 		itemTextColorActive: "#ed448e",
 		itemBorderActive: "0px",
 		itemColorActive: "#FBEDF6",
@@ -50,7 +48,20 @@ const themeOverrides: GlobalThemeOverrides = {
 	},
 	Dialog: {
 		closeColorHover: "transparent"
-	}
+	},
+	Input: {
+		borderHover: "1px solid #ed448e",
+		borderFocus: "1px solid #ed448e",
+		boxShadowFocus: "",
+		caretColor: "#ed448e"
+	},
+	Radio: {
+		dotColorActive: "#ed448e",
+		boxShadowFocus: "inset 0 0 0 1px rgb(224, 224, 230)",
+		boxShadowHover: "inset 0 0 0 1px #ed448e",
+		boxShadowActive: "inset 0 0 0 1px #ed448e"
+	},
+	Popover: {}
 };
 
 onMounted(() => {
@@ -75,6 +86,9 @@ onMounted(() => {
 </template>
 
 <style lang="scss">
+.art-notice {
+	display: none !important;
+}
 * {
 	margin: 0;
 	padding: 0;
@@ -93,9 +107,16 @@ onMounted(() => {
 		background-color: #777490;
 	}
 }
+
+body {
+	width: 100vw;
+	height: 100vh;
+	overflow: hidden;
+}
+
 button {
 	margin-right: 40px;
-	padding: 10px 18px;
+	padding: 8px 18px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -161,5 +182,21 @@ button {
 .page-leave-to {
 	opacity: 0;
 	transform: translateY(20px);
+}
+
+.lyric-enter-active,
+.lyric-leave-active {
+	transition: all 0.5s ease;
+	will-change: transform;
+}
+
+.lyric-enter-to,
+.lyric-leave-from {
+	transform: translateY(0);
+}
+
+.lyric-enter-from,
+.lyric-leave-to {
+	transform: translateY(100vh);
 }
 </style>

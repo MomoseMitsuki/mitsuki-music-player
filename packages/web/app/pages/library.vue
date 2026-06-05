@@ -13,7 +13,7 @@ watch(
 	() => route.path,
 	() => {
 		const childPath = route.path.replace(/^\/library\/?/, "");
-		const childPathArr = ["", "local", "recent", "love"];
+		const childPathArr = ["", "recent", "love"];
 		const index = childPathArr.findIndex(
 			(path: string) => path === childPath
 		);
@@ -41,10 +41,6 @@ watch(
 			<NuxtLink class="library__nav_item" to="/library">
 				<Icon name="mdi:music" size="18" />
 				全部音乐
-			</NuxtLink>
-			<NuxtLink class="library__nav_item" to="/library/local">
-				<Icon name="mdi:folder-music-outline" size="18" />
-				本地管理
 			</NuxtLink>
 			<NuxtLink class="library__nav_item" to="/library/recent">
 				<Icon name="mdi:clock-outline" size="18" />

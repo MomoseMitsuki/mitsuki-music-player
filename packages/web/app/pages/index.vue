@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { useHeadSafe } from "#app";
-import FeatureEntry from "~/components/FeatureEntry.vue";
-import AlbumCard from "~/components/AlbumCard.vue";
+
 useHeadSafe({
 	title: "主页"
 });
@@ -68,76 +67,10 @@ useHeadSafe({
 				justify="space-between"
 				style="margin: 20px 0"
 			>
-				<AlbumCard
-					src="test"
-					title="宝石心学院 原生音乐集"
-					sub-title="OST"
-					date="2024.01.03"
-				/>
-				<AlbumCard
-					src="test"
-					title="宝石心学院 原生音乐集"
-					sub-title="OST"
-					date="2024.01.03"
-				/>
-				<AlbumCard
-					src="test"
-					title="宝石心学院 原生音乐集"
-					sub-title="OST"
-					date="2024.01.03"
-				/>
-				<AlbumCard
-					src="test"
-					title="宝石心学院 原生音乐集"
-					sub-title="OST"
-					date="2024.01.03"
-				/>
-				<AlbumCard
-					src="test"
-					title="宝石心学院 原生音乐集"
-					sub-title="OST"
-					date="2024.01.03"
-				/>
 			</n-flex>
 			<n-flex align="end">
 				<h3>推荐歌单</h3>
 				<h5>RECOMMENDED PLAYLISTS</h5>
-			</n-flex>
-			<n-flex
-				align="center"
-				justify="space-between"
-				style="margin: 20px 0"
-			>
-				<AlbumCard
-					src="test"
-					title="宝石心学院 原生音乐集"
-					sub-title="OST"
-					date="2024.01.03"
-				/>
-				<AlbumCard
-					src="test"
-					title="宝石心学院 原生音乐集"
-					sub-title="OST"
-					date="2024.01.03"
-				/>
-				<AlbumCard
-					src="test"
-					title="宝石心学院 原生音乐集"
-					sub-title="OST"
-					date="2024.01.03"
-				/>
-				<AlbumCard
-					src="test"
-					title="宝石心学院 原生音乐集"
-					sub-title="OST"
-					date="2024.01.03"
-				/>
-				<AlbumCard
-					src="test"
-					title="宝石心学院 原生音乐集"
-					sub-title="OST"
-					date="2024.01.03"
-				/>
 			</n-flex>
 		</div>
 	</div>
