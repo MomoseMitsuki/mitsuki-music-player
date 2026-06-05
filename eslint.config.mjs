@@ -6,6 +6,12 @@ import eslintPluginVue from "eslint-plugin-vue";
 import vueParser from "vue-eslint-parser";
 import globals from "globals";
 import eslintConfigPrettier from "eslint-config-prettier/flat";
+import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const ignores = [
 	"**/dist/**",
@@ -14,7 +20,9 @@ const ignores = [
 	"**/node_modules/**",
 	".*",
 	"scripts/**",
-	"**/*.d.ts"
+	"**/*.d.ts",
+	"eslint.config.mjs",
+	"prettier.config.mjs"
 ];
 
 export default defineConfig(
@@ -33,7 +41,12 @@ export default defineConfig(
 		languageOptions: {
 			ecmaVersion: "latest",
 			sourceType: "module",
-			parser: tseslint.parser
+			parser: tseslint.parser,
+			parserOptions: {
+				tsconfigRootDir: __dirname,
+				project: "./tsconfig.json",
+				extraFileExtensions: [".vue"]
+			}
 		},
 		rules: {
 			"no-var": "error"
@@ -63,21 +76,28 @@ export default defineConfig(
 			"no-undef": "off"
 		}
 	},
-	// {
-	// 	ignores,
-	// 	files: ["packages/admin/**/*.{ts,js,tsx,jsx}"],
-	// 	extends: [
-	// 		reactHooks.configs.flat.recommended,
-	// 		reactRefresh.configs.vite
-	// 	],
-	// 	languageOptions: { globals: { ...globals.browser } }
-	// },
 	{
-		files: ["packages/backend/**/*.{ts,js}"],
+		files: ["packages/backend/**/*.{ts,js,mts,mjs,mjs,cjs}"],
+		extends: [
+			eslint.configs.recommended,
+			...tseslint.configs.recommended,
+			eslintConfigPrettier
+		],
 		languageOptions: {
 			globals: {
-				...globals.node
+				...globals.node,
+				...globals.jest
+			},
+			sourceType: "commonjs",
+			parserOptions: {
+				tsconfigRootDir: __dirname,
+				project: "./tsconfig.json"
 			}
+		},
+		rules: {
+			"@typescript-eslint/no-explicit-any": "off",
+			"@typescript-eslint/no-floating-promises": "off",
+			"@typescript-eslint/no-unsafe-argument": "warn"
 		}
 	}
 );

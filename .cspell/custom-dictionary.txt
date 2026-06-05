@@ -7,7 +7,9 @@ Tsuku
 VOLUMEKEY
 MODEKEY
 QUEUEKEY
+PLAYINDEXKEY
 Artplayer
 artplayer
 cssr
 FFTSIZE
+clickoutside
