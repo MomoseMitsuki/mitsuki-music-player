@@ -1,0 +1,177 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+// schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// =======================
+// 1. User 模块 (用户)
+// =======================
+model User {
+  id            String    @id @default(uuid())
+  account       String    @unique
+  name          String
+  password      String
+  avatar        String?
+  experience    Int       @default(0)
+  bio           String?   @db.Text
+  privacy_flags Int       @default(0) @map("privacy_flags") // 保持前端下划线命名
+  
+  createTime    DateTime  @default(now()) @map("create_time") // 对应前端 createTime
+  updateTime    DateTime  @updatedAt @map("update_time")     // 对应前端 updateTime
+  loginTime     DateTime? @map("login_time")
+
+  // 关注与粉丝（自关联多对多）
+  followers     User[]    @relation("UserFollows")
+  following     User[]    @relation("UserFollows")
+
+  // 我创建的歌单
+  playlists     PlayList[] @relation("UserCreatedPlaylists")
+
+  // 核心收藏关系：多对多（Prisma 7 隐式连接表，底层不冗余）
+  favMusics     Music[]    @relation("UserFavoriteMusics")
+  favPlaylists  PlayList[] @relation("UserFavoritePlaylists")
+  favAlbums     Album[]    @relation("UserFavoriteAlbums")
+  favVideos     Video[]    @relation("UserFavoriteVideos")
+  favArtists    Artist[]   @relation("UserFavoriteArtists")
+
+  @@map("users")
+}
+
+// =======================
+// 2. Artist 模块 (艺术家)
+// =======================
+model Artist {
+  id          String   @id @default(uuid())
+  name        String
+  avatar      String?
+  createTime  DateTime @default(now()) @map("create_time")
+  updateTime  DateTime @updatedAt @map("update_time")
+
+  // 作品关联
+  albums      Album[]
+  songs       Music[]  @relation("ArtistSongs")
+  videos      Video[]  @relation("ArtistVideos")
+
+  // 粉丝收藏关系
+  favoritedBy User[]   @relation("UserFavoriteArtists")
+
+  @@map("artists")
+}
+
+// =======================
+// 3. Album 模块 (专辑)
+// =======================
+model Album {
+  id          String   @id @default(uuid())
+  name        String
+  avatar      String?
+  description String?  @db.Text
+  tags        String[] // PostgreSQL 原生字符串数组
+  total       Int      @default(0)
+  favorite    Int      @default(0) // 替换原 view 字段，存储收藏总数
+  createTime  DateTime @default(now()) @map("create_time")
+  updateTime  DateTime @updatedAt @map("update_time")
+
+  // 关联主艺术家
+  artistId    String?  @map("artist_id")
+  artist      Artist?  @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  
+  // 专辑内的歌曲
+  songs       Music[]
+
+  // 被哪些用户收藏
+  favoritedBy User[]   @relation("UserFavoriteAlbums")
+
+  @@map("albums")
+}
+
+// =======================
+// 4. PlayList 模块 (歌单)
+// =======================
+model PlayList {
+  id          String   @id @default(uuid())
+  name        String
+  avatar      String?
+  description String?  @db.Text
+  public      Boolean  @default(true)
+  tags        String[] 
+  total       Int      @default(0)
+  favorite    Int      @default(0) // 替换原 view 字段，存储收藏总数
+  createTime  DateTime @default(now()) @map("create_time")
+  updateTime  DateTime @updatedAt @map("update_time")
+
+  // 歌单创建者
+  creatorId   String   @map("creator_id")
+  creator     User     @relation("UserCreatedPlaylists", fields: [creatorId], references: [id], onDelete: Cascade)
+
+  // 歌单包含的歌曲（多对多）
+  songs       Music[]  @relation("PlayListSongs")
+
+  // 被哪些用户收藏
+  favoritedBy User[]   @relation("UserFavoritePlaylists")
+
+  @@map("playlists")
+}
+
+// =======================
+// 5. Music 模块 (歌曲)
+// =======================
+model Music {
+  id          String   @id @default(uuid())
+  name        String
+  avatar      String?
+  src         String
+  duration    Int      
+  videoId     String?  @map("video_id")
+  lyricId     String?  @map("lyric_id")
+  favorite    Int      @default(0) // 替换原 view 字段，存储收藏总数
+  createTime  DateTime @default(now()) @map("create_time")
+  updateTime  DateTime @updatedAt @map("update_time")
+
+  // 参与的艺术家（多对多）
+  artists     Artist[] @relation("ArtistSongs")
+
+  // 所属专辑
+  albumId     String?  @map("album_id")
+  album       Album?   @relation(fields: [albumId], references: [id], onDelete: SetNull)
+
+  // 被哪些歌单收录（多对多）
+  playlists   PlayList[] @relation("PlayListSongs")
+
+  // 被哪些用户收藏
+  favoritedBy User[]   @relation("UserFavoriteMusics")
+
+  @@map("musics")
+}
+
+// =======================
+// 6. Video 模块 (MV/视频)
+// =======================
+model Video {
+  id          String   @id @default(uuid())
+  name        String
+  avatar      String?
+  description String?  @db.Text
+  src         String
+  duration    Int
+  favorite    Int      @default(0) // 替换原 view 字段，存储收藏总数
+  createTime  DateTime @default(now()) @map("create_time")
+  updateTime  DateTime @updatedAt @map("update_time")
+
+  // 关联艺术家（多对多，比原 TS 的单 string 结构更符合关系型数据库规范）
+  artists     Artist[] @relation("ArtistVideos")
+
+  // 被哪些用户收藏
+  favoritedBy User[]   @relation("UserFavoriteVideos")
+
+  @@map("videos")
+}
