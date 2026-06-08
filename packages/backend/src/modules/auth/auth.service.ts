@@ -15,7 +15,11 @@ export class AuthService {
 
 	async register(registerDto: RegisterDto, res: FastifyReply) {
 		const { account, name, password } = registerDto;
-		const user = await this.usersService.createUser(account, name, password)
+		const user = await this.usersService.createUser(
+			account,
+			name,
+			password
+		);
 
 		const id: string = user.id;
 		const tokens = await this.generateTokens(id);
@@ -42,7 +46,6 @@ export class AuthService {
 		// 异步刷新登录时间
 		this.usersService.updateLoginTime(id).catch(() => {});
 
-		
 		const tokens = await this.generateTokens(id);
 		this.storeTokensInCookie(res, tokens.accessToken, tokens.refreshToken);
 

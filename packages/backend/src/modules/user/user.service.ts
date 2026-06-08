@@ -11,7 +11,7 @@ export class UsersService {
 
 	get includeWithOwnerUser() {
 		return {
-			playlists: { 
+			playlists: {
 				include: {
 					creator: {
 						select: {
@@ -19,15 +19,15 @@ export class UsersService {
 							name: true
 						}
 					}
-				} 
-			}, 
+				}
+			},
 			favMusics: { select: { id: true } },
 			favPlaylists: { select: { id: true } },
 			favAlbums: { select: { id: true } },
 			favVideos: { select: { id: true } },
 			favArtists: { select: { id: true } },
-			_count: { select: { followers: true, following: true } },
-		}
+			_count: { select: { followers: true, following: true } }
+		};
 	}
 
 	async createUser(account: string, name: string, password: string) {
@@ -38,8 +38,8 @@ export class UsersService {
 				password
 			},
 			include: this.includeWithOwnerUser
-		})
-		return user
+		});
+		return user;
 	}
 
 	async findOneByAccount(account: string) {
@@ -47,7 +47,7 @@ export class UsersService {
 			where: { account },
 			include: this.includeWithOwnerUser
 		});
-		return user
+		return user;
 	}
 
 	async findOneById(id: string) {
@@ -67,32 +67,34 @@ export class UsersService {
 	async getOwnerUser(id: string) {
 		const owner = await this.prisma.user.findUnique({
 			where: { id },
-			include: this.includeWithOwnerUser,
-		})
+			include: this.includeWithOwnerUser
+		});
 
 		if (!owner) {
 			throw new UnauthorizedException("用户不存在");
 		}
 
-		return owner
+		return owner;
 	}
 
 	async mapToOwnerUser(user: Awaited<ReturnType<typeof this.getOwnerUser>>) {
 		return {
 			name: user.name,
 			avatar: user.avatar,
-			bio: user.bio || '',
+			bio: user.bio || "",
 			experience: user.experience,
 			fansCount: user._count.followers,
 			followedCount: user._count.following,
-			playlists: user.playlists.map(this.playlistService.mapToSimplePlayList),
+			playlists: user.playlists.map(
+				this.playlistService.mapToSimplePlayList
+			),
 			favorite: {
 				musics: user.favMusics.map(p => p.id),
 				playlists: user.favPlaylists.map(p => p.id),
 				albums: user.favAlbums.map(p => p.id),
 				videos: user.favVideos.map(p => p.id),
-				artists: user.favArtists.map(p => p.id),
-			},
+				artists: user.favArtists.map(p => p.id)
+			}
 		};
 	}
 }
