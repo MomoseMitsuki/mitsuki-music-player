@@ -89,3 +89,17 @@ export const formatLyric = (lyricStr: string) => {
 	}
 	return _deleteSpace(result);
 };
+
+export function getLevel(exp: number) {
+	if (!exp || exp <= 0) return 1;
+
+	if (exp >= 53100) return 60;
+
+	const level = Math.floor((1 + Math.sqrt(1 + (4 * exp) / 15)) / 2);
+
+	return Math.min(level, 60);
+}
+
+export function formatSingers(singers: Array<SimpleData>) {
+	return singers.map(item => item.name).join("、");
+}
