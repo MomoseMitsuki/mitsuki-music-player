@@ -41,7 +41,6 @@ export class RemoveNullInterceptor<T> implements NestInterceptor<
 
 	private recursivelyStripNull<V>(obj: V): DeepRecursivelyStripNull<V> {
 		if (obj === null) {
-			console.log(obj);
 			return undefined as any;
 		}
 
