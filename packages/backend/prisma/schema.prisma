@@ -74,7 +74,7 @@ model Album {
   id          String   @id @default(uuid())
   name        String
   avatar      String?
-  description String?  @db.Text
+  description String  @db.Text @default("")
   tags        String[] // PostgreSQL 原生字符串数组
   total       Int      @default(0)
   favorite    Int      @default(0) // 替换原 view 字段，存储收藏总数
@@ -101,7 +101,7 @@ model PlayList {
   id          String   @id @default(uuid())
   name        String
   avatar      String?
-  description String?  @db.Text
+  description String  @db.Text	@default("")
   public      Boolean  @default(true)
   tags        String[] 
   total       Int      @default(0)
