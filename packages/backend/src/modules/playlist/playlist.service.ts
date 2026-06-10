@@ -18,7 +18,7 @@ export class PlaylistService {
 					name: true
 				}
 			}
-		}
+		};
 	}
 
 	async mapToSimplePlayList(
@@ -88,19 +88,19 @@ export class PlaylistService {
 				public: isPublic,
 				creator: {
 					connect: {
-						id: userId,
-					},
-				},
+						id: userId
+					}
+				}
 			},
 			include: this.includeWithSimple
 		});
 
-		return this.mapToSimplePlayList(playlist)
+		return this.mapToSimplePlayList(playlist);
 	}
 
 	async updatePlayList(userId: string, dto: UpdatePlaylistDto) {
 		const playlist = await this.prisma.playList.findUnique({
-			where: { id: dto.id },
+			where: { id: dto.id }
 		});
 
 		if (!playlist) {
@@ -114,7 +114,8 @@ export class PlaylistService {
 		const updateData: Record<string, any> = {};
 		if (dto.name !== void 0) updateData.name = dto.name;
 		if (dto.avatar !== void 0) updateData.avatar = dto.avatar;
-		if (dto.description !== void 0) updateData.description = dto.description;
+		if (dto.description !== void 0)
+			updateData.description = dto.description;
 
 		const newList = await this.prisma.playList.update({
 			where: { id: dto.id },
@@ -122,6 +123,6 @@ export class PlaylistService {
 			include: this.includeWithSimple
 		});
 
-		return this.mapToSimplePlayList(newList)
+		return this.mapToSimplePlayList(newList);
 	}
 }
