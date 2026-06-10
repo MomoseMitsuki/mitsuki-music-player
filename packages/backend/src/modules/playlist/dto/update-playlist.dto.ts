@@ -1,10 +1,6 @@
 import { IsNotEmpty, IsOptional, IsString } from "class-validator";
 
-export class CreatePlaylistDto {
-	@IsNotEmpty()
-	@IsString()
-	userId!: string;
-
+export class UpdatePlaylistDto {
 	@IsNotEmpty()
 	@IsString()
 	id!: string;
