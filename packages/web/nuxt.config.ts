@@ -54,7 +54,10 @@ export default defineNuxtConfig({
 			})
 		],
 		optimizeDeps: {
-			include: ["@css-render/vue3-ssr"]
+			include: [
+				"@css-render/vue3-ssr",
+				"localforage" // CommonJS
+			]
 		},
 		css: {
 			preprocessorOptions: {
