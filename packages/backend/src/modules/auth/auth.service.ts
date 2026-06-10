@@ -5,6 +5,7 @@ import { UsersService } from "@/modules/user/user.service";
 import { CryptoUtil } from "@/common/utils/crypto.util";
 import { LoginDto } from "./dto/login.dto";
 import { RegisterDto } from "./dto/register.dto";
+import { formatUser } from "@/common/utils/format.util";
 
 @Injectable()
 export class AuthService {
@@ -25,7 +26,7 @@ export class AuthService {
 		const tokens = await this.generateTokens(id);
 		this.storeTokensInCookie(res, tokens.accessToken, tokens.refreshToken);
 
-		return this.usersService.mapToOwnerUser(user);
+		return formatUser(user);
 	}
 
 	async login(loginDto: LoginDto, res: FastifyReply) {
@@ -49,7 +50,7 @@ export class AuthService {
 		const tokens = await this.generateTokens(id);
 		this.storeTokensInCookie(res, tokens.accessToken, tokens.refreshToken);
 
-		return this.usersService.mapToOwnerUser(user);
+		return formatUser(user);
 	}
 
 	async refreshTokens(userId: string, res: FastifyReply) {

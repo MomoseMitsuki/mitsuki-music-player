@@ -5,6 +5,7 @@ import {
 } from "@nestjs/common";
 import { PrismaService } from "@/core/database/prisma.service";
 import { UpdatePlaylistDto } from "./dto";
+import type { SimplePlayList } from "@/common/interface";
 
 @Injectable()
 export class PlaylistService {
@@ -21,9 +22,7 @@ export class PlaylistService {
 		};
 	}
 
-	async mapToSimplePlayList(
-		playlist: Awaited<ReturnType<typeof this.getPlayList>>
-	) {
+	async mapToSimplePlayList(playlist: SimplePlayList) {
 		if (!playlist) {
 			throw new NotFoundException("歌单没有找到");
 		}

@@ -1,12 +1,11 @@
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { PrismaService } from "@/core/database/prisma.service";
-import { PlaylistService } from "@/modules/playlist/playlist.service";
+import type { User } from "@/common/interface";
 
 @Injectable()
 export class UsersService {
 	constructor(
 		private prisma: PrismaService,
-		private playlistService: PlaylistService
 	) {}
 
 	get includeWithOwnerUser() {
@@ -30,8 +29,8 @@ export class UsersService {
 		};
 	}
 
-	async createUser(account: string, name: string, password: string) {
-		const user = await this.prisma.user.create({
+	async createUser(account: string, name: string, password: string): Promise<User> {
+		const user: User | null = await this.prisma.user.create({
 			data: {
 				account,
 				name,
@@ -39,33 +38,48 @@ export class UsersService {
 			},
 			include: this.includeWithOwnerUser
 		});
+		if (!user) {
+			throw new UnauthorizedException("用户不存在");
+		}
 		return user;
 	}
 
-	async findOneByAccount(account: string) {
-		const user = await this.prisma.user.findUnique({
+	async findOneByAccount(account: string): Promise<User> {
+		const user: User | null = await this.prisma.user.findUnique({
 			where: { account },
 			include: this.includeWithOwnerUser
 		});
-		return user;
+
+		if (!user) {
+			throw new UnauthorizedException("用户不存在");
+		}
+
+		return user
 	}
 
-	async findOneById(id: string) {
-		return this.prisma.user.findUnique({
+	async findOneById(id: string): Promise<User> {
+		const user: User | null = await this.prisma.user.findUnique({
 			where: { id },
 			include: this.includeWithOwnerUser
 		});
+
+		if (!user) {
+			throw new UnauthorizedException("用户不存在");
+		}
+
+		return user
 	}
 
 	async updateLoginTime(id: string) {
-		return this.prisma.user.update({
+		this.prisma.user.update({
 			where: { id },
 			data: { loginTime: new Date() }
 		});
+		return
 	}
 
-	async getOwnerUser(id: string) {
-		const owner = await this.prisma.user.findUnique({
+	async getOwnerUser(id: string): Promise<User> {
+		const owner: User | null = await this.prisma.user.findUnique({
 			where: { id },
 			include: this.includeWithOwnerUser
 		});
@@ -75,26 +89,5 @@ export class UsersService {
 		}
 
 		return owner;
-	}
-
-	async mapToOwnerUser(user: Awaited<ReturnType<typeof this.getOwnerUser>>) {
-		return {
-			name: user.name,
-			avatar: user.avatar,
-			bio: user.bio || "",
-			experience: user.experience,
-			fansCount: user._count.followers,
-			followedCount: user._count.following,
-			playlists: user.playlists.map(
-				this.playlistService.mapToSimplePlayList
-			),
-			favorite: {
-				musics: user.favMusics.map(p => p.id),
-				playlists: user.favPlaylists.map(p => p.id),
-				albums: user.favAlbums.map(p => p.id),
-				videos: user.favVideos.map(p => p.id),
-				artists: user.favArtists.map(p => p.id)
-			}
-		};
 	}
 }

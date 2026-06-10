@@ -39,6 +39,7 @@ export class AuthController {
 		@Body() registerDto: RegisterDto,
 		@Res({ passthrough: true }) res: FastifyReply
 	) {
-		return this.authService.register(registerDto, res);
+		const user = await this.authService.register(registerDto, res);
+		return user;
 	}
 }
