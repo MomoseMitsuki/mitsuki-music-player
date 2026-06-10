@@ -1,7 +1,7 @@
 <script lang="ts" setup></script>
 
 <template>
-	<div>单曲搜索页面</div>
+	<div>艺术家搜索页面</div>
 </template>
 
 <style></style>
