@@ -1,4 +1,4 @@
-import $style from "~/assets/styles/modules/dialog.module.scss";
+import $style from "./styles/create-playlist.module.scss";
 import type { DialogOptions, DialogApi } from "naive-ui";
 import { Icon } from "#components";
 import { NFlex, NCheckbox } from "naive-ui";

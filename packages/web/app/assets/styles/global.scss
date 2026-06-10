@@ -29,3 +29,20 @@ input {
 	white-space: nowrap;
 	text-overflow: ellipsis;
 }
+
+.empty__data {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 400px;
+}
+
+.flex__center {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+svg:focus {
+	outline: none;
+}
