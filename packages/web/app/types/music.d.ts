@@ -4,7 +4,7 @@ interface Music extends BaseData {
 	src: string;
 	duration: number;
 	view: number;
-	singers?: string;
+	singers: Array<SimpleData>;
 	album?: SimpleData;
 	videoId: string;
 	lyricId: string;
@@ -20,12 +20,18 @@ interface Video extends BaseData {
 	singers: string;
 }
 
-interface Artist extends BaseData {
+interface SimpleArtist extends BaseData {
 	avatar?: string;
 	name: string;
+	albumsCount: number;
+	videosCount: number;
+	songsCount: number;
+}
+
+interface Artist extends SimpleArtist {
 	albums: Array<SimpleAlbum>;
-	songs: Array<Music>;
 	videos: Array<Video>;
+	songs: Array<Music>;
 }
 
 interface QueryMusic {

@@ -3,7 +3,9 @@ interface SimpleAlbum extends BaseData {
 	name: string;
 	singers: SimpleData;
 	view: number;
-	tag?: string;
+	total: number;
+	description: string;
+	tags: string[];
 }
 
 interface Album extends SimpleAlbum {
@@ -16,7 +18,9 @@ interface SimplePlayList extends BaseData {
 	name: string;
 	creator: SimpleData;
 	view: number;
-	tag?: string;
+	total: number;
+	description: string;
+	tags: string[];
 }
 
 interface PlayList extends SimplePlayList {
