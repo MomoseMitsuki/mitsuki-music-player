@@ -54,3 +54,6 @@ coverage/
 # eslint
 .eslintcache
 
+# auto-import
+auto-imports.d.ts
+components.d.ts
