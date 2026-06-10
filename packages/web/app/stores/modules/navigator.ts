@@ -4,6 +4,7 @@ export const useNavigatorStore = defineStore("navigatorStore", () => {
 	const router = useRouter();
 
 	function navigateVideo(id: Id) {
+		eventEmitter.emit("VIDEO:PLAY");
 		router.push(`/video/${id}`);
 	}
 
@@ -19,10 +20,20 @@ export const useNavigatorStore = defineStore("navigatorStore", () => {
 		router.push(`/artist/${id}`);
 	}
 
+	function navigateUser(id: Id) {
+		router.push(`/user/${id}`);
+	}
+
+	function navigateSetting(id: Id) {
+		router.push(`/user/${id}/setting`);
+	}
+
 	return {
 		navigateVideo,
 		navigatePlaylist,
 		navigateAlbum,
-		navigateArtist
+		navigateArtist,
+		navigateUser,
+		navigateSetting
 	};
 });

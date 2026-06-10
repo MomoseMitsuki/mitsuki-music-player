@@ -4,7 +4,7 @@ import { eventEmitter } from "@/utils";
 const FFTSIZE = 128;
 interface AudioState {
 	name: string;
-	singers?: string;
+	singers: Array<SimpleData>;
 	avatar?: string;
 	src: string;
 	paused: boolean;
@@ -15,7 +15,7 @@ interface AudioState {
 }
 const EMPTY_DATA: AudioState = {
 	name: "花逢坂町",
-	singers: void 0,
+	singers: [],
 	avatar: "",
 	src: "",
 	paused: true,
