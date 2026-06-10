@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { IsNotEmpty, IsOptional, IsString, IsArray } from "class-validator";
 
 export class UpdatePlaylistDto {
 	@IsNotEmpty()
@@ -16,4 +16,14 @@ export class UpdatePlaylistDto {
 	@IsOptional()
 	@IsString()
 	description?: string;
+
+	@IsOptional()
+	@IsArray()
+	@IsString({ each: true })
+	addMusicIds?: string[];
+
+	@IsOptional()
+	@IsArray()
+	@IsString({ each: true })
+	removeMusicIds?: string[];
 }

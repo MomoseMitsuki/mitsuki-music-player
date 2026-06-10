@@ -117,6 +117,22 @@ export class PlaylistService {
 		if (dto.description !== void 0)
 			updateData.description = dto.description;
 
+		if (dto.addMusicIds?.length || dto.removeMusicIds?.length) {
+			updateData.songs = {};
+
+			if (dto.addMusicIds?.length) {
+				updateData.songs.connect = dto.addMusicIds.map(id => ({
+					id
+				}));
+			}
+
+			if (dto.removeMusicIds?.length) {
+				updateData.songs.disconnect = dto.removeMusicIds.map(id => ({
+					id
+				}));
+			}
+		}
+
 		const newList = await this.prisma.playList.update({
 			where: { id: dto.id },
 			data: updateData,
