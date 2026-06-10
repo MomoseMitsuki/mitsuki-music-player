@@ -1,3 +1,22 @@
+<script lang="ts" setup>
+const router = useRouter();
+const inputValue = ref("");
+
+function submitSearch() {
+	const encodeKeyword = encodeURIComponent(inputValue.value);
+	const url = `/search?keyword=${encodeKeyword}`;
+	router.push(url);
+}
+
+const route = useRoute();
+if (route.path.includes("/search")) {
+	const keyword = decodeURIComponent(
+		route.query.keyword ? route.query.keyword.toString() : ""
+	);
+	inputValue.value = keyword;
+}
+</script>
+
 <template>
 	<div class="input__container">
 		<svg
@@ -11,16 +30,17 @@
 				fill="#897b84"
 			></path>
 		</svg>
-		<input
-			type="text"
-			class="form__input"
-			spellcheck="false"
-			placeholder="搜索音乐、专辑、艺术家..."
-		/>
+		<form @submit.prevent="submitSearch">
+			<input
+				v-model="inputValue"
+				type="text"
+				class="form__input"
+				spellcheck="false"
+				placeholder="搜索音乐、专辑、艺术家..."
+			/>
+		</form>
 	</div>
 </template>
-
-<script lang="ts" setup></script>
 
 <style scoped lang="scss">
 .input__container {

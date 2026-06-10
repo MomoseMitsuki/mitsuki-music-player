@@ -1,13 +1,12 @@
 <script lang="ts" setup>
 const audioStore = useAudioStore();
 const queueStore = useQueueStore();
-const { navigateVideo } = useNavigatorStore();
+const { navigateVideo, navigateArtist } = useNavigatorStore();
 const userStore = useUserStore();
 
 const { emptyAudio } = audioStore;
 const { playMusic, deleteMusic } = queueStore;
-const { isMusicInFavorite, addMusicToFavorite, deleteMusicFromFavorite } =
-	userStore;
+const { isMusicInFavorite, toggleFavoriteMusic } = userStore;
 
 const { queue } = storeToRefs(queueStore);
 
@@ -25,6 +24,25 @@ function clearDefaultQueue() {
 	queue.value = [];
 	emptyAudio();
 }
+
+// const filterQueue = computed(() => {
+// 	if (!searchValue.value) {
+// 		return queue.value;
+// 	}
+// 	const result: Array<Music> = [];
+// 	for (const music of queue.value) {
+// 		if (music.name.includes(searchValue.value)) {
+// 			result.push(music);
+// 			break;
+// 		}
+// 		for (const singer of music.singers) {
+// 			if (singer.name.includes(searchValue.value)) {
+// 				result.push(music);
+// 			}
+// 		}
+// 	}
+// 	return queue.value;
+// });
 </script>
 
 <template>
@@ -88,12 +106,8 @@ function clearDefaultQueue() {
 			>
 				<div class="index">{{ index + 1 }}</div>
 				<NuxtImg
-					:src="
-						item.avatar
-							? item.avatar
-							: '/images/default_music_avatar.webp'
-					"
-					placeholder="/images/default_music_avatar.webp"
+					:src="useAvatar(item.avatar, DefaultAvatar.MUSIC)"
+					:placeholder="DefaultAvatar.MUSIC"
 					width="50px"
 					height="50px"
 					fit="cover"
@@ -104,7 +118,21 @@ function clearDefaultQueue() {
 				>
 					<div class="name">{{ item.name }}</div>
 					<div class="singers">
-						{{ item.singers ? item.singers : "未知" }}
+						<span v-if="item.singers.length === 0">未知</span>
+						<span v-else>
+							<span
+								v-for="(singer, i) in item.singers"
+								:key="singer.id"
+							>
+								<span
+									@click.stop="
+										() => navigateArtist(singer.id)
+									"
+									>{{ singer.name }}</span
+								>
+								{{ i === item.singers.length - 1 ? "" : "、" }}
+							</span>
+						</span>
 					</div>
 				</div>
 				<div v-show="!(selectedIndex === index)" class="duration">
@@ -112,18 +140,17 @@ function clearDefaultQueue() {
 				</div>
 				<div v-show="selectedIndex === index" class="icon__container">
 					<Icon
-						v-if="!isMusicInFavorite(item)"
+						v-if="!isMusicInFavorite(item.id)"
 						name="mdi:cards-heart-outline"
-						:size="24"
-						class=""
-						@click.stop="() => addMusicToFavorite(item)"
+						:size="20"
+						@click.stop="() => toggleFavoriteMusic(item.id)"
 					></Icon>
 					<Icon
 						v-else
 						name="mdi:cards-heart"
-						:size="24"
+						:size="20"
 						class="primary"
-						@click.stop="() => deleteMusicFromFavorite(item)"
+						@click.stop="() => toggleFavoriteMusic(item.id)"
 					></Icon>
 					<Icon
 						v-if="item.videoId"

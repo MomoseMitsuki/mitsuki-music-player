@@ -73,6 +73,9 @@ import NavItem from "~/components/NavItem.vue";
 	text-align: center;
 	padding: 10px 0;
 	box-shadow: 3px 0 10px #ece9f1;
+	* {
+		font-family: "思源黑体";
+	}
 }
 .space {
 	height: 40px;

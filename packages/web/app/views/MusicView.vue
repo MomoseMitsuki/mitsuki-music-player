@@ -5,11 +5,12 @@ import PlayQueue from "./PlayQueue.vue";
 const audioStore = useAudioStore();
 const queueStore = useQueueStore();
 const userStore = useUserStore();
+const navigatorStore = useNavigatorStore();
 
 const { play, pause, ensureAudio, setVolume } = audioStore;
 const { changeMode, playPrev, playNext } = queueStore;
-const { isMusicInFavorite, addMusicToFavorite, deleteMusicFromFavorite } =
-	userStore;
+const { isMusicInFavorite, toggleFavoriteMusic } = userStore;
+const { navigateArtist } = navigatorStore;
 
 const { reactiveInfo, isDragProgress } = storeToRefs(audioStore);
 const { queue, mode, playIndex } = storeToRefs(queueStore);
@@ -49,13 +50,8 @@ const endDragMusicProgress = () => {
 				</svg>
 			</div>
 			<NuxtImg
-				:src="
-					reactiveInfo.avatar
-						? reactiveInfo.avatar
-						: '/images/default_music_avatar.webp'
-				"
-				placeholder="/images/default_music_avatar.webp"
-				fallback="/images/default_music_avatar.webp"
+				:src="useAvatar(reactiveInfo.avatar, DefaultAvatar.MUSIC)"
+				:placeholder="DefaultAvatar.MUSIC"
 				width="50"
 				height="50"
 				fit="cover"
@@ -66,22 +62,33 @@ const endDragMusicProgress = () => {
 				{{ reactiveInfo.name }}
 			</div>
 			<div class="singers">
-				{{ reactiveInfo.singers ? reactiveInfo.singers : "未知" }}
+				<span v-if="reactiveInfo.singers.length === 0">未知</span>
+				<span v-else>
+					<span
+						v-for="(singer, i) in reactiveInfo.singers"
+						:key="singer.id"
+					>
+						<span @click.stop="() => navigateArtist(singer.id)">{{
+							singer.name
+						}}</span>
+						{{ i === reactiveInfo.singers.length - 1 ? "" : "、" }}
+					</span>
+				</span>
 			</div>
 		</div>
 		<Icon
-			v-if="!isMusicInFavorite(queue[playIndex]!)"
+			v-if="!isMusicInFavorite(queue[playIndex]?.id)"
 			name="mdi:cards-heart-outline"
 			:size="24"
 			class="heart hover"
-			@click="() => addMusicToFavorite(queue[playIndex]!)"
+			@click="() => toggleFavoriteMusic(queue[playIndex]?.id)"
 		></Icon>
 		<Icon
 			v-else
 			name="mdi:cards-heart"
 			:size="24"
 			class="heart hover primary"
-			@click="() => deleteMusicFromFavorite(queue[playIndex]!)"
+			@click="() => toggleFavoriteMusic(queue[playIndex]?.id)"
 		></Icon>
 
 		<Icon
@@ -275,6 +282,7 @@ svg {
 		@include ellipsis;
 		font-size: 10px;
 		color: $light_text_color;
+		cursor: pointer;
 	}
 }
 .music__progress {

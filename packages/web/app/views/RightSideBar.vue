@@ -5,28 +5,19 @@ const audioStore = useAudioStore();
 const queueStore = useQueueStore();
 const userStore = useUserStore();
 
+const { navigatePlaylist } = useNavigatorStore();
 const { play, pause } = audioStore;
 const { playPrev, playNext } = queueStore;
-const { isMusicInFavorite, addMusicToFavorite, deleteMusicFromFavorite } =
-	userStore;
+const { isMusicInFavorite, toggleFavoriteMusic } = userStore;
 
 const { reactiveInfo, isInit, analyser, dataArray } = storeToRefs(audioStore);
 const { queue, playIndex } = storeToRefs(queueStore);
+const { user } = storeToRefs(userStore);
 
 const { show } = useCreatePlayListDialog(dialog);
 
 const GAP = 2;
 const canvasRef = useTemplateRef("canvas");
-
-const mockListsData = [
-	{ src: "", name: "花逢坂町", total: 10 },
-	{ src: "", name: "花逢坂町", total: 10 },
-	{ src: "", name: "花逢坂町", total: 10 },
-	{ src: "", name: "花逢坂町", total: 10 },
-	{ src: "", name: "花逢坂町", total: 10 },
-	{ src: "", name: "花逢坂町", total: 10 },
-	{ src: "", name: "花逢坂町", total: 10 }
-];
 
 onMounted(() => {
 	const cvs = canvasRef.value!;
@@ -56,118 +47,138 @@ onMounted(() => {
 </script>
 
 <template>
-	<n-layout-sider width="21vw" class="sideBar__container">
-		<div class="player__container">
-			<h3>正在播放</h3>
-			<h5>NOW PLAYING</h5>
-			<NuxtImg
-				:src="
-					reactiveInfo.avatar || '/images/default_music_avatar.webp'
-				"
-				placeholder="/images/default_music_avatar.webp"
-				width="180"
-				height="180"
-				style="border-radius: 20px"
-			></NuxtImg>
-			<n-flex align="end" justify="space-between" style="margin: 5px 0">
-				<div>
-					<div class="marquee__container">
-						<div v-marquee="reactiveInfo.name" class="name">
-							{{ reactiveInfo.name }}
+	<n-layout-sider width="21vw">
+		<n-flex vertical :size="[0, 0]" class="sideBar__container">
+			<div class="player__container">
+				<h3>正在播放</h3>
+				<h5>NOW PLAYING</h5>
+				<NuxtImg
+					:src="useAvatar(reactiveInfo.avatar, DefaultAvatar.MUSIC)"
+					:placeholder="DefaultAvatar.MUSIC"
+					width="180"
+					height="180"
+					style="border-radius: 20px"
+				></NuxtImg>
+				<n-flex
+					align="end"
+					justify="space-between"
+					style="margin: 5px 0"
+				>
+					<div>
+						<div class="marquee__container">
+							<div v-marquee="reactiveInfo.name" class="name">
+								{{ reactiveInfo.name }}
+							</div>
+						</div>
+						<div class="singer">
+							<span v-if="reactiveInfo.singers.length === 0"
+								>未知</span
+							>
+							<span v-else>
+								<span
+									v-for="(singer, i) in reactiveInfo.singers"
+									:key="singer.id"
+								>
+									<span>{{ singer.name }}</span>
+									{{
+										i === reactiveInfo.singers.length - 1
+											? ""
+											: "、"
+									}}
+								</span>
+							</span>
 						</div>
 					</div>
-					<div class="singer">
-						{{
-							reactiveInfo.singers ? reactiveInfo.singers : "未知"
-						}}
+					<Icon
+						v-if="!isMusicInFavorite(queue[playIndex]?.id)"
+						name="mdi:cards-heart-outline"
+						:size="24"
+						class="heart hover"
+						@click.stop="
+							() => toggleFavoriteMusic(queue[playIndex]?.id)
+						"
+					></Icon>
+					<Icon
+						v-else
+						name="mdi:cards-heart"
+						:size="24"
+						class="heart hover primary"
+						@click.stop="
+							() => toggleFavoriteMusic(queue[playIndex]!.id)
+						"
+					></Icon>
+				</n-flex>
+
+				<n-flex align="center" justify="center">
+					<canvas ref="canvas"></canvas>
+				</n-flex>
+
+				<n-flex
+					align="center"
+					justify="space-between"
+					style="margin: 20px 0; padding: 0 50px"
+				>
+					<Icon
+						name="mdi:skip-previous"
+						:size="30"
+						class="hover"
+						@click="playPrev"
+					></Icon>
+
+					<div
+						v-if="reactiveInfo.paused"
+						class="play-btn hover"
+						@click="play"
+					>
+						<Icon name="mdi:play" :size="20"></Icon>
 					</div>
-				</div>
-				<Icon
-					v-if="!isMusicInFavorite(queue[playIndex]!)"
-					name="mdi:cards-heart-outline"
-					:size="24"
-					class="heart hover"
-					@click.stop="() => addMusicToFavorite(queue[playIndex]!)"
-				></Icon>
-				<Icon
-					v-else
-					name="mdi:cards-heart"
-					:size="24"
-					class="heart hover primary"
-					@click.stop="
-						() => deleteMusicFromFavorite(queue[playIndex]!)
-					"
-				></Icon>
-			</n-flex>
+					<div v-else class="play-btn hover" @click="pause">
+						<Icon name="mdi:pause" :size="20"></Icon>
+					</div>
 
-			<n-flex align="center" justify="center">
-				<canvas ref="canvas"></canvas>
-			</n-flex>
-
+					<Icon
+						name="mdi:skip-next"
+						:size="30"
+						class="hover"
+						@click="playNext"
+					></Icon>
+				</n-flex>
+			</div>
 			<n-flex
 				align="center"
 				justify="space-between"
-				style="margin: 20px 0; padding: 0 50px"
+				style="margin: 20px 30px"
 			>
-				<Icon
-					name="mdi:skip-previous"
-					:size="30"
-					class="hover"
-					@click="playPrev"
-				></Icon>
-
-				<div
-					v-if="reactiveInfo.paused"
-					class="play-btn hover"
-					@click="play"
-				>
-					<Icon name="mdi:play" :size="20"></Icon>
+				<div>
+					<h3>我的歌单</h3>
+					<div class="small-font">MY PLAYLISTS</div>
 				</div>
-				<div v-else class="play-btn hover" @click="pause">
-					<Icon name="mdi:pause" :size="20"></Icon>
+				<div class="small-font" style="cursor: pointer" @click="show">
+					+ 新增歌单
 				</div>
-
-				<Icon
-					name="mdi:skip-next"
-					:size="30"
-					class="hover"
-					@click="playNext"
-				></Icon>
 			</n-flex>
-		</div>
-		<n-flex
-			align="center"
-			justify="space-between"
-			style="margin: 20px 30px"
-		>
-			<div>
-				<h3>我的歌单</h3>
-				<div class="small-font">MY PLAYLISTS</div>
-			</div>
-			<div class="small-font" style="cursor: pointer" @click="show">
-				+ 新增歌单
+			<div v-if="user?.playlists" class="playlist__container">
+				<n-flex
+					v-for="item in user!.playlists"
+					:key="item.id"
+					align="center"
+					class="playlist__item"
+					@click="() => navigatePlaylist(item.id)"
+				>
+					<NuxtImg
+						:src="useAvatar(item.avatar)"
+						:placeholder="DefaultAvatar.MUSIC"
+						width="40px"
+						height="40px"
+						fit="cover"
+					></NuxtImg>
+					<div>
+						<div class="name">{{ item.name }}</div>
+						<div class="total">{{ item.total }}首</div>
+					</div>
+				</n-flex>
 			</div>
 		</n-flex>
-		<div class="playlist__container">
-			<n-flex
-				v-for="(item, index) in mockListsData"
-				:key="index"
-				align="center"
-				class="playlist__item"
-			>
-				<NuxtImg
-					:src="item.src"
-					placeholder="/images/default_music_avatar.webp"
-					width="40px"
-					height="40px"
-					fit="cover"
-				></NuxtImg>
-				<div>
-					<div class="name">{{ item.name }}</div>
-					<div class="total">{{ item.total }}首</div>
-				</div>
-			</n-flex>
-		</div>
 	</n-layout-sider>
 </template>
 
@@ -191,6 +202,9 @@ onMounted(() => {
 }
 
 .playlist__container {
+	overflow-y: auto;
+	min-height: 0;
+	flex: 1;
 	padding: 10px 10px;
 	img {
 		margin-right: 10px;
@@ -201,9 +215,11 @@ onMounted(() => {
 		height: 50px;
 		padding: 0 20px;
 		border-radius: 5px;
+		user-select: none;
+		cursor: pointer;
 		.name {
 			@include ellipsis;
-			font-size: 15px;
+			font-size: 13px;
 			color: $text_color;
 		}
 		.total {
@@ -226,6 +242,8 @@ onMounted(() => {
 	font-size: 10px;
 }
 .sideBar__container {
+	display: flex;
+	flex-direction: column;
 	position: relative;
 	z-index: $z_right_side;
 	user-select: none;
@@ -233,7 +251,6 @@ onMounted(() => {
 	background-color: $light_bg_color;
 	box-shadow: -3px 0 10px #ece9f1;
 	overflow-x: hidden;
-	overflow-y: scroll;
 	h3 {
 		color: $text_color;
 	}

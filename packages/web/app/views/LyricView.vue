@@ -74,12 +74,8 @@ onUnmounted(() => {
 				<div class="record__container">
 					<NuxtImg src="/images/record.webp" width="450" />
 					<NuxtImg
-						:src="
-							reactiveInfo.avatar
-								? reactiveInfo.avatar
-								: '/images/default_music_avatar.webp'
-						"
-						placeholder="/images/default_music_avatar.webp"
+						:src="useAvatar(reactiveInfo.avatar)"
+						:placeholder="DefaultAvatar.MUSIC"
 						width="320"
 						height="320"
 						fit="cover"
@@ -88,7 +84,9 @@ onUnmounted(() => {
 				<div v-marquee="reactiveInfo.name" class="name">
 					{{ reactiveInfo.name }}
 				</div>
-				<div class="singers">{{ reactiveInfo.singers }}</div>
+				<div class="singers">
+					{{ formatSingers(reactiveInfo.singers!) }}
+				</div>
 			</div>
 			<div class="lyric__container">
 				<n-flex v-if="pending" align="center" style="height: 598px">
@@ -224,17 +222,11 @@ ul {
 		transform: scale(1);
 		transform-origin: left;
 		transition: transform 0.3s ease;
-		text-shadow:
-			0 1px 0 rgba(255, 255, 255, 0.6),
-			0 1px 3px rgba(0, 0, 0, 0.06);
 		&.active {
 			color: $primary;
 			mix-blend-mode: difference;
 			font-weight: bold;
 			transform: scale(1.2);
-			text-shadow:
-				0 1px 0 rgba(255, 255, 255, 0.5),
-				0 2px 6px rgba(237, 68, 142, 0.25);
 		}
 	}
 }
