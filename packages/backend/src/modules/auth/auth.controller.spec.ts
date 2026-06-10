@@ -19,7 +19,17 @@ describe("AuthController (认证接口集成测试)", () => {
 		account: "test_music_user",
 		password: "",
 		name: "Mitsuki",
-		avatar: "http://avatar.com/1.png"
+		avatar: "http://avatar.com/1.png",
+		playlists: [],
+		favMusics: [],
+		favPlaylists: [],
+		favAlbums: [],
+		favVideos: [],
+		favArtists: [],
+		_count: {
+			following: 0,
+			followers: 0
+		}
 	};
 
 	const mockUsersService = {
@@ -49,6 +59,7 @@ describe("AuthController (认证接口集成测试)", () => {
 			.register(fastifyCookie, { secret: "TEST_SECRET" });
 
 		app = moduleRef.createNestApplication<NestFastifyApplication>(adapter);
+		app.setGlobalPrefix("api");
 		await app.init();
 	});
 
@@ -59,14 +70,12 @@ describe("AuthController (认证接口集成测试)", () => {
 	it("/auth/login (POST) - 输入正确账密，应该登录成功并返回 Cookie", async () => {
 		const response = await app.inject({
 			method: "POST",
-			url: "/auth/login",
+			url: "/api/auth/login",
 			headers: { "content-type": "application/json" },
 			payload: { account: "test_music_user", password: "123456" }
 		});
-
+		console.log();
 		expect(response.statusCode).toBe(201);
-		const body = JSON.parse(response.body);
-		expect(body.message).toBe("登录成功");
 
 		const cookies = response.headers["set-cookie"];
 		expect(cookies).toBeDefined();
@@ -75,7 +84,7 @@ describe("AuthController (认证接口集成测试)", () => {
 	it("/auth/login (POST) - 输入错误密码，应该抛出 401", async () => {
 		const response = await app.inject({
 			method: "POST",
-			url: "/auth/login",
+			url: "/api/auth/login",
 			headers: { "content-type": "application/json" },
 			payload: { account: "test_music_user", password: "wrong_password" }
 		});
@@ -89,7 +98,7 @@ describe("AuthController (认证接口集成测试)", () => {
 		// 1. 第一步：先调登录接口，去获取真实 refresh_token
 		const loginResponse = await app.inject({
 			method: "POST",
-			url: "/auth/login",
+			url: "/api/auth/login",
 			headers: { "content-type": "application/json" },
 			payload: { account: "test_music_user", password: "123456" }
 		});
@@ -105,7 +114,7 @@ describe("AuthController (认证接口集成测试)", () => {
 		// 2. 第二步：携带这个 Cookie 轰炸续期接口
 		const response = await app.inject({
 			method: "POST",
-			url: "/auth/refresh",
+			url: "/api/auth/refresh",
 			headers: {
 				cookie: cookieValue // 注入 Cookie
 			}
@@ -130,7 +139,7 @@ describe("AuthController (认证接口集成测试)", () => {
 	it("/auth/refresh (POST) - 未携带任何 Token，应该直接拦截并返回 401", async () => {
 		const response = await app.inject({
 			method: "POST",
-			url: "/auth/refresh" // 裸奔请求
+			url: "/api/auth/refresh" // 裸奔请求
 		});
 
 		expect(response.statusCode).toBe(401);

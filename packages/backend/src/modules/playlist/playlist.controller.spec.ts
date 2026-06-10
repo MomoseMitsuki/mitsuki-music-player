@@ -16,7 +16,8 @@ describe("PlaylistController (歌单接口集成测试)", () => {
 	const mockPlaylistService = {
 		deletePlatyList: jest.fn(),
 		createPlayList: jest.fn(),
-		updatePlayList: jest.fn()
+		updatePlayList: jest.fn(),
+		mapToSimplePlayList: jest.fn(data => data)
 	};
 
 	const mockUserId = "secure_user_uuid_2026";
