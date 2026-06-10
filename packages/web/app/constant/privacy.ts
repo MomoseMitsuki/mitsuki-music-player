@@ -1,0 +1,8 @@
+export enum PrivacyFlags {
+	PERSONAL_PLAYLISTS = 1 << 0,
+	FAVORITE_PLAYLISTS = 1 << 1,
+	FAVORITE_ALBUMS = 1 << 2,
+	FAVORITE_MUSICS = 1 << 3,
+	FAVORITE_VIDEOS = 1 << 4,
+	FAVORITE_ARTISTS = 1 << 5
+}
