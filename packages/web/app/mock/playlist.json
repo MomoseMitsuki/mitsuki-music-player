@@ -1,0 +1,16 @@
+{
+	"id": "13123131",
+	"avatar": "/mock/avatar/music/mock2.webp",
+	"public": true,
+	"name": "宝石心学院",
+	"creator": {
+		"id": "1",
+		"name": "百濑美月"
+	},
+	"view": 2432,
+	"total": 12,
+	"description": "超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超长文本测试",
+	"tags": [],
+	"createTime": 1778846150050,
+	"updateTime": 1778846150050
+}

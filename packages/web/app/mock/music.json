@@ -1,0 +1,228 @@
+[
+	{
+		"id": "1",
+		"name": "twyndyllyngs ～不具合のアリス～ 'W'",
+		"singers": [
+			{
+				"id": "1",
+				"name": "中家志穂"
+			},
+			{
+				"id": "2",
+				"name": "中家菜穂"
+			}
+		],
+		"avatar": "/mock/avatar/music/mock1.jpg",
+		"src": "/mock/music/mock.mp3",
+		"duration": 225,
+		"view": 2432,
+		"album": {
+			"id": "1",
+			"name": "宝石心学院 原声集OST"
+		},
+		"createTime": 1778846150050,
+		"updateTime": 1778846150050,
+		"videoId": "1",
+		"lyricId": "1"
+	},
+	{
+		"id": "2",
+		"name": "君とのミチシルベ",
+		"singers": [
+			{
+				"id": "3",
+				"name": "藤井稿太郎"
+			},
+			{
+				"id": "4",
+				"name": "Kyoka"
+			}
+		],
+		"avatar": "/mock/avatar/music/mock2.webp",
+		"src": "/mock/music/mock2.mp3",
+		"duration": 248,
+		"view": 2432,
+		"album": {
+			"id": "1",
+			"name": "宝石心学院 原声集OST"
+		},
+		"createTime": 1778846150050,
+		"updateTime": 1778846150050,
+		"videoId": "2",
+		"lyricId": "2"
+	},
+	{
+		"id": "3",
+		"name": "Will of Adamant",
+		"singers": [
+			{
+				"id": "3",
+				"name": "藤井稿太郎"
+			},
+			{
+				"id": "5",
+				"name": "佐咲紗花"
+			}
+		],
+		"avatar": "/mock/avatar/music/mock2.webp",
+		"src": "/mock/music/mock3.mp3",
+		"duration": 229,
+		"view": 2432,
+		"createTime": 1778846150050,
+		"updateTime": 1778846150050,
+		"videoId": "3",
+		"lyricId": "3"
+	},
+	{
+		"id": "4",
+		"name": "Precious Line",
+		"singers": [
+			{
+				"id": "6",
+				"name": "佐倉紗織"
+			}
+		],
+		"avatar": "/mock/avatar/music/mock4.webp",
+		"src": "/mock/music/mock4.mp3",
+		"duration": 277,
+		"view": 2432,
+		"createTime": 1778846150050,
+		"updateTime": 1778846150050,
+		"videoId": "",
+		"lyricId": "4"
+	},
+	{
+		"id": "5",
+		"name": "Path to glory",
+		"singers": [
+			{
+				"id": "7",
+				"name": "Faylan"
+			}
+		],
+		"avatar": "/mock/avatar/music/mock5.webp",
+		"src": "/mock/music/mock5.flac",
+		"duration": 262,
+		"view": 2432,
+		"album": {
+			"id": "1",
+			"name": "宝石心学院 原声集OST"
+		},
+		"createTime": 1778846150050,
+		"updateTime": 1778846150050,
+		"videoId": "",
+		"lyricId": ""
+	},
+	{
+		"id": "6",
+		"name": "刻ト詩-OP Short ver",
+		"singers": [
+			{
+				"id": "8",
+				"name": "水谷瑠奈"
+			}
+		],
+		"avatar": "/mock/avatar/music/mock6.webp",
+		"src": "/mock/music/mock6.mp3",
+		"duration": 109,
+		"view": 2432,
+		"createTime": 1778846150050,
+		"updateTime": 1778846150050,
+		"videoId": "",
+		"lyricId": "6"
+	},
+	{
+		"id": "7",
+		"name": "アオイトリ (青鸟)",
+		"singers": [
+			{
+				"id": "9",
+				"name": "橋本みゆき"
+			}
+		],
+		"avatar": "/mock/avatar/music/mock7.jpg",
+		"src": "/mock/music/mock7.flac",
+		"duration": 327,
+		"view": 2432,
+		"album": {
+			"id": "1",
+			"name": "宝石心学院 原声集OST"
+		},
+		"createTime": 1778846150050,
+		"updateTime": 1778846150050,
+		"videoId": "",
+		"lyricId": ""
+	},
+	{
+		"id": "8",
+		"name": "BWLAUTE BEIRRD",
+		"singers": [
+			{
+				"id": "10",
+				"name": "夢乃ゆき"
+			}
+		],
+		"avatar": "/mock/avatar/music/mock8.png",
+		"src": "/mock/music/mock8.mp3",
+		"duration": 230,
+		"view": 2432,
+		"createTime": 1778846150050,
+		"updateTime": 1778846150050,
+		"videoId": "",
+		"lyricId": "8"
+	},
+	{
+		"id": "9",
+		"name": "空気力学少女と少年の詩 (空气力学少女与少年的诗)",
+		"singers": [
+			{
+				"id": "11",
+				"name": "はな"
+			}
+		],
+		"avatar": "/mock/avatar/music/mock9.jpg",
+		"src": "/mock/music/mock9.mp3",
+		"duration": 253,
+		"view": 2432,
+		"createTime": 1778846150050,
+		"updateTime": 1778846150050,
+		"videoId": "",
+		"lyricId": "9"
+	},
+	{
+		"id": "10",
+		"name": "raspberry cube",
+		"singers": [
+			{
+				"id": "12",
+				"name": "松下"
+			}
+		],
+		"avatar": "/mock/avatar/music/mock10.jpg",
+		"src": "/mock/music/mock10.flac",
+		"duration": 214,
+		"view": 2432,
+		"createTime": 1778846150050,
+		"updateTime": 1778846150050,
+		"videoId": "",
+		"lyricId": ""
+	},
+	{
+		"id": "11",
+		"name": "STYX HELIX",
+		"singers": [
+			{
+				"id": "13",
+				"name": "MYTH & ROID"
+			}
+		],
+		"avatar": "/mock/avatar/music/mock11.webp",
+		"src": "/mock/music/mock11.mp3",
+		"duration": 289,
+		"view": 2432,
+		"createTime": 1778846150050,
+		"updateTime": 1778846150050,
+		"videoId": "",
+		"lyricId": "11"
+	}
+]
